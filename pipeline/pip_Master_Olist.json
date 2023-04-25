@@ -124,7 +124,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Ingest Customer",
+						"activity": "waiFimBronze",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -149,7 +149,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Ingest Orders",
+						"activity": "Clean Geo Location",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -174,7 +174,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Ingest Order Items",
+						"activity": "Clean Geo Location",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -199,7 +199,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Ingest Reviews",
+						"activity": "Clean Geo Location",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -224,7 +224,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Ingest Geo Location",
+						"activity": "Clean Payments",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -249,7 +249,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Ingest Payments",
+						"activity": "Clean Customers",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -274,7 +274,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Ingest Category Name Translations",
+						"activity": "Clean Geo Location",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -299,7 +299,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Ingest Products",
+						"activity": "Clean Geo Location",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -324,7 +324,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Ingest Sellers",
+						"activity": "Clean Geo Location",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -470,12 +470,6 @@
 				"type": "Wait",
 				"dependsOn": [
 					{
-						"activity": "Clean Customers",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
 						"activity": "Clean Orders",
 						"dependencyConditions": [
 							"Succeeded"
@@ -489,18 +483,6 @@
 					},
 					{
 						"activity": "Clean Reviews",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "Clean Geo Location",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "Clean Payments",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -552,6 +534,70 @@
 						"SourceDirectory": "SILVER_OLIST",
 						"TargetDirectory": "GOLD_OLIST"
 					}
+				}
+			},
+			{
+				"name": "waiFimBronze",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "Ingest Customer",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Ingest Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Ingest Order Items",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Ingest Reviews",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Ingest Geo Location",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Ingest Payments",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Ingest Category Name Translations",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Ingest Products",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Ingest Sellers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
 				}
 			}
 		],
