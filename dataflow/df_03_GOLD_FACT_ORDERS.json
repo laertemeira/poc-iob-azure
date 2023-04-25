@@ -68,6 +68,7 @@
 				"          DT_DELIVERED_CARRIER,",
 				"          DT_DEVLIVERED_CUSTOMER,",
 				"          DT_DELIFVERY_ESTIMATE,",
+				"          DS_STATUS = order_status,",
 				"          {_sourcefile}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
