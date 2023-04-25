@@ -3312,6 +3312,7 @@
 											"type": "Expression"
 										}
 									},
+									"source1": {},
 									"snkFact": {
 										"Directory": {
 											"value": "@pipeline().parameters.TargetDirectory",
@@ -5229,7 +5230,44 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "order_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "customer_id",
+						"type": "UTF8"
+					},
+					{
+						"name": "order_status",
+						"type": "UTF8"
+					},
+					{
+						"name": "order_purchase_timestamp",
+						"type": "UTF8"
+					},
+					{
+						"name": "order_approved_at",
+						"type": "UTF8"
+					},
+					{
+						"name": "order_delivered_carrier_date",
+						"type": "UTF8"
+					},
+					{
+						"name": "order_delivered_customer_date",
+						"type": "UTF8"
+					},
+					{
+						"name": "order_estimated_delivery_date",
+						"type": "UTF8"
+					},
+					{
+						"name": "_sourcefile",
+						"type": "UTF8"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/ws-pociob-WorkspaceDefaultStorage')]"
@@ -5578,6 +5616,7 @@
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     rowUrlColumn:'_watermark',",
+						"     truncate: true,",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -6002,6 +6041,9 @@
 								"type": "DatasetReference"
 							},
 							"name": "srcOrders"
+						},
+						{
+							"name": "source1"
 						}
 					],
 					"sinks": [
@@ -6034,40 +6076,42 @@
 						"          order_id as string,",
 						"          customer_id as string,",
 						"          order_status as string,",
-						"          order_purchase_timestamp as string,",
-						"          order_approved_at as string,",
-						"          order_delivered_carrier_date as string,",
-						"          order_delivered_customer_date as string,",
-						"          order_estimated_delivery_date as string,",
+						"          order_purchase_timestamp as timestamp,",
+						"          order_approved_at as timestamp,",
+						"          order_delivered_carrier_date as date,",
+						"          order_delivered_customer_date as date,",
+						"          order_estimated_delivery_date as date,",
 						"          {_sourcefile} as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: true,",
 						"     format: 'parquet') ~> srcOrders",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false) ~> source1",
 						"srcOrders derive(ID_ORDER = order_id,",
 						"          ID_CUSTOMER = customer_id,",
-						"          TM_PURCHASE = toTimestamp(order_purchase_timestamp),",
-						"          TM_APROVED = toTimestamp(order_approved_at),",
-						"          DT_DELIVERED_CARRIER = toDate(order_delivered_carrier_date),",
-						"          DT_DELIVERED_CUSTOMER = toDate(order_delivered_customer_date),",
-						"          DT_DELIVERY_ESTIMATE = toDate(order_estimated_delivery_date),",
+						"          TM_PURCHASE = order_purchase_timestamp,",
+						"          TM_APPROVED = order_approved_at,",
+						"          DT_DELIVERED_CARRIER = order_delivered_carrier_date,",
+						"          DT_DELIVERED_CUSTOMER = order_delivered_customer_date,",
+						"          DT_DELIVERY_ESTIMATED = order_estimated_delivery_date,",
 						"          DS_STATUS = initCap(order_status),",
 						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> colTransform",
 						"colTransform select(mapColumn(",
 						"          ID_ORDER,",
 						"          ID_CUSTOMER,",
 						"          TM_PURCHASE,",
-						"          TM_APROVED,",
+						"          TM_APPROVED,",
 						"          DT_DELIVERED_CARRIER,",
 						"          DT_DELIVERED_CUSTOMER,",
-						"          DT_DELIVERY_ESTIMATE,",
+						"          DT_DELIVERY_ESTIMATED,",
 						"          DS_STATUS,",
 						"          {_sourcefile},",
 						"          {_watermark}",
 						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> selFactLayout",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> selFactLayout",
 						"selFactLayout sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
@@ -6129,6 +6173,46 @@
 					},
 					"currentConnection": {
 						"databaseName": "GOLD_OLIST",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 11')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT TOP (100) *\n FROM [GOLD_OLIST].[dbo].[FACT_ORDERS]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "GOLD_OLIST",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 12')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT TOP (100) [order_id]\n,[customer_id]\n,[order_status]\n,[order_purchase_timestamp]\n,[order_approved_at]\n,[order_delivered_carrier_date]\n,[order_delivered_customer_date]\n,[order_estimated_delivery_date]\n,[_sourcefile]\n FROM [Database1].[dbo].[olist_orders]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "Database1",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -7857,7 +7941,7 @@
 										}
 									},
 									{
-										"Name": "TM_APROVED",
+										"Name": "TM_APPROVED",
 										"OriginDataTypeName": {
 											"TypeName": "timestamp",
 											"IsComplexType": false,
@@ -7893,7 +7977,7 @@
 										}
 									},
 									{
-										"Name": "DT_DELIVERY_ESTIMATE",
+										"Name": "DT_DELIVERY_ESTIMATED",
 										"OriginDataTypeName": {
 											"TypeName": "date",
 											"IsComplexType": false,
