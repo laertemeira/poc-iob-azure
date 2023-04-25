@@ -20,11 +20,20 @@
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"srcOrders": {
-								"Directory": "SILVER_OLIST/olist_orders_dataset/"
+								"Directory": {
+									"value": "@{pipeline().parameters.SourceDirectory}/@{pipeline().parameters.FileName}",
+									"type": "Expression"
+								}
 							},
 							"snkFact": {
-								"Directory": "GOLD_OLIST",
-								"Table": "FACT_ORDERS"
+								"Directory": {
+									"value": "@pipeline().parameters.TargetDirectory",
+									"type": "Expression"
+								},
+								"Table": {
+									"value": "@pipeline().parameters.FileName",
+									"type": "Expression"
+								}
 							}
 						}
 					},
@@ -38,13 +47,16 @@
 		],
 		"parameters": {
 			"FileName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "FACT_ORDERS"
 			},
 			"SourceDirectory": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "SILVER_OLIST"
 			},
 			"TargetDirectory": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "GOLD_OLIST"
 			}
 		},
 		"folder": {
