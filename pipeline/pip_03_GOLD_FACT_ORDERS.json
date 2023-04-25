@@ -36,6 +36,17 @@
 				}
 			}
 		],
+		"parameters": {
+			"FileName": {
+				"type": "string"
+			},
+			"SourceDirectory": {
+				"type": "string"
+			},
+			"TargetDirectory": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "03_GOLD_OLIST"
 		},
