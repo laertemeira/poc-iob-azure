@@ -1,5 +1,5 @@
 {
-	"name": "Dataflow1",
+	"name": "df_03_GOLD_FACT_ORDERS",
 	"properties": {
 		"folder": {
 			"name": "03_GOLD_OLIST"
@@ -33,7 +33,7 @@
 					"name": "colTransform"
 				},
 				{
-					"name": "select1"
+					"name": "selFactLayout"
 				}
 			],
 			"scriptLines": [
@@ -71,8 +71,8 @@
 				"          {_sourcefile}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> selFactLayout",
+				"selFactLayout sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     umask: 0022,",
