@@ -15,20 +15,54 @@
 					"name": "srcOrders"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "snkFact",
+					"rejectedDataLinkedService": {
+						"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          order_id as string,",
+				"          customer_id as string,",
+				"          order_status as string,",
+				"          order_purchase_timestamp as string,",
+				"          order_approved_at as string,",
+				"          order_delivered_carrier_date as string,",
+				"          order_delivered_customer_date as string,",
+				"          order_estimated_delivery_date as string,",
+				"          {_sourcefile} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     moveFiles: ['',''],",
+				"     format: 'parquet') ~> srcOrders",
+				"srcOrders derive(ID_ORDER = order_id,",
+				"          TM_PURCHASE = toTimestamp(order_purchase_timestamp),",
+				"          TM_APROVED = toTimestamp(order_approved_at),",
+				"          DT_DELIVERED_CARRIER = toDate(order_delivered_carrier_date),",
+				"          DT_DEVLIVERED_CUSTOMER = toDate(order_delivered_customer_date),",
+				"          DT_DELIFVERY_ESTIMATE = toDate(order_estimated_delivery_date)) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     wildcardPaths:['**']) ~> srcOrders",
-				"srcOrders derive() ~> derivedColumn1"
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> snkFact"
 			]
 		}
 	}
