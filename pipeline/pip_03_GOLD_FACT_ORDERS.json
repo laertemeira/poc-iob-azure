@@ -1,5 +1,5 @@
 {
-	"name": "Pipeline 1",
+	"name": "pip_03_GOLD_FACT_ORDERS",
 	"properties": {
 		"activities": [
 			{
