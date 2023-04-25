@@ -88,19 +88,7 @@
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     mapColumn(",
-				"          ID_ORDER,",
-				"          ID_CUSTOMER,",
-				"          TM_PURCHASE,",
-				"          TM_APROVED,",
-				"          DT_DELIVERED_CARRIER,",
-				"          DT_DELIVERED_CUSTOMER,",
-				"          DT_DELIVERY_ESTIMATE,",
-				"          DS_STATUS,",
-				"          {_sourcefile},",
-				"          {_watermark}",
-				"     )) ~> snkFact"
+				"     skipDuplicateMapOutputs: true) ~> snkFact"
 			]
 		}
 	}
