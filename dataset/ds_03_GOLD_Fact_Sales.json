@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "03_GOLD_OLIST"
+			"name": "OUTROS"
 		},
 		"annotations": [],
 		"type": "Parquet",
