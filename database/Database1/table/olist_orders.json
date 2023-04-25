@@ -1,20 +1,20 @@
 {
-	"name": "olist_order_items",
+	"name": "olist_orders",
 	"properties": {
-		"Name": "olist_order_items",
+		"Name": "olist_orders",
 		"EntityType": "TABLE",
-		"TableType": "EXTERNAL",
 		"Namespace": {
-			"SchemaName": null,
-			"DatabaseName": "Database1",
-			"DatabaseId": null
+			"DatabaseName": "Database1"
+		},
+		"Description": "",
+		"TableType": "EXTERNAL",
+		"Origin": {
+			"Type": "SPARK"
 		},
 		"StorageDescriptor": {
-			"Distribution": null,
 			"Columns": [
 				{
 					"Name": "order_id",
-					"Description": null,
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
@@ -27,21 +27,7 @@
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "order_item_id",
-					"Description": null,
-					"OriginDataTypeName": {
-						"TypeName": "integer",
-						"IsComplexType": false,
-						"IsNullable": true,
-						"Properties": {
-							"HIVE_TYPE_STRING": "integer"
-						}
-					},
-					"DeltaFormatInvalidMessages": []
-				},
-				{
-					"Name": "product_id",
-					"Description": null,
+					"Name": "customer_id",
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
@@ -54,8 +40,7 @@
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "seller_id",
-					"Description": null,
+					"Name": "order_status",
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
@@ -68,8 +53,7 @@
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "shipping_limit_date",
-					"Description": null,
+					"Name": "order_purchase_timestamp",
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
@@ -82,34 +66,59 @@
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "price",
-					"Description": null,
+					"Name": "order_approved_at",
 					"OriginDataTypeName": {
-						"TypeName": "float",
+						"TypeName": "string",
 						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 8000,
 						"Properties": {
-							"HIVE_TYPE_STRING": "float"
+							"HIVE_TYPE_STRING": "string"
 						}
 					},
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "freight_value",
-					"Description": null,
+					"Name": "order_delivered_carrier_date",
 					"OriginDataTypeName": {
-						"TypeName": "float",
+						"TypeName": "string",
 						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 8000,
 						"Properties": {
-							"HIVE_TYPE_STRING": "float"
+							"HIVE_TYPE_STRING": "string"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "order_delivered_customer_date",
+					"OriginDataTypeName": {
+						"TypeName": "string",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Length": 8000,
+						"Properties": {
+							"HIVE_TYPE_STRING": "string"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "order_estimated_delivery_date",
+					"OriginDataTypeName": {
+						"TypeName": "string",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Length": 8000,
+						"Properties": {
+							"HIVE_TYPE_STRING": "string"
 						}
 					},
 					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "_sourcefile",
-					"Description": null,
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
@@ -122,20 +131,19 @@
 					"DeltaFormatInvalidMessages": []
 				}
 			],
-			"ColumnSetEntityName": "98cceb4e-1b17-4325-a89b-223a1031cb96",
 			"Format": {
 				"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
 				"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
 				"FormatType": "parquet",
 				"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
 				"Properties": {
-					"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_order_items_dataset",
+					"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_orders_dataset",
 					"FormatTypeSetToDatabaseDefault": false
 				}
 			},
 			"Source": {
 				"Provider": "ADLS",
-				"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_order_items_dataset",
+				"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_orders_dataset",
 				"Properties": {
 					"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
 					"LocationSetToDatabaseDefault": false
@@ -143,38 +151,21 @@
 			},
 			"Properties": {
 				"textinputformat.record.delimiter": ",",
-				"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+				"compression": "",
 				"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 			},
 			"Compressed": false,
-			"SerDeInfo": null,
 			"IsStoredAsSubdirectories": false
 		},
-		"Owner": null,
-		"CreateTime": 0,
-		"LastAccessTime": 0,
-		"Retention": 0,
-		"Temporary": false,
-		"IsRewriteEnabled": false,
-		"ViewOriginalText": null,
-		"ViewExpandedText": null,
-		"Origin": {
-			"Type": "SPARK"
-		},
-		"OriginObjectId": null,
-		"IsSharedEntity": false,
-		"PublishStatus": "PUBLISHED",
 		"Properties": {
 			"Description": "",
 			"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
 			"PrimaryKeys": "",
-			"spark.sql.sources.provider": "parquet",
-			"spark.sql.sources.schema.numParts": "1",
-			"spark.sql.sources.schema.part.0": "{\"type\":\"struct\",\"fields\":[{\"name\":\"order_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"order_item_id\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"product_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"seller_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"shipping_limit_date\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"price\",\"type\":\"float\",\"nullable\":true,\"metadata\":{}},{\"name\":\"freight_value\",\"type\":\"float\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_sourcefile\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}"
+			"spark.sql.sources.provider": "parquet"
 		},
-		"ObjectVersion": 1,
-		"ObjectId": "7bc60873-ec2d-4c33-be09-4fc56966365c",
-		"Description": ""
+		"Retention": 0,
+		"Temporary": false,
+		"IsRewriteEnabled": false
 	},
 	"type": "TABLE"
 }

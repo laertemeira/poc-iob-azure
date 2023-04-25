@@ -19,13 +19,11 @@
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
-						"Length": 0,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "geolocation_lat",
@@ -34,13 +32,11 @@
 						"TypeName": "float",
 						"IsComplexType": false,
 						"IsNullable": true,
-						"Length": 0,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "float"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "geolocation_lng",
@@ -49,13 +45,11 @@
 						"TypeName": "float",
 						"IsComplexType": false,
 						"IsNullable": true,
-						"Length": 0,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "float"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "geolocation_city",
@@ -65,12 +59,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "geolocation_state",
@@ -80,12 +73,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "_sourcefile",
@@ -95,12 +87,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				}
 			],
 			"ColumnSetEntityName": "a175a74e-9bbe-468d-a9f0-01636f2bb7f5",
@@ -124,7 +115,7 @@
 			},
 			"Properties": {
 				"textinputformat.record.delimiter": ",",
-				"compression": "",
+				"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 				"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 			},
 			"Compressed": false,

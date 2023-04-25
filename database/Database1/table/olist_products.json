@@ -20,12 +20,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "product_category_name",
@@ -35,12 +34,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "product_name_lenght",
@@ -49,13 +47,11 @@
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
-						"Length": 0,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "product_description_lenght",
@@ -64,13 +60,11 @@
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
-						"Length": 0,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "product_photos_qty",
@@ -79,13 +73,11 @@
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
-						"Length": 0,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "product_weight_g",
@@ -94,13 +86,11 @@
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
-						"Length": 0,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "product_length_cm",
@@ -109,13 +99,11 @@
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
-						"Length": 0,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "product_height_cm",
@@ -124,13 +112,11 @@
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
-						"Length": 0,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "product_width_cm",
@@ -139,13 +125,11 @@
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
-						"Length": 0,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "_sourcefile",
@@ -155,12 +139,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				}
 			],
 			"ColumnSetEntityName": "f98325e8-7823-4d12-963e-3664786c203c",
@@ -184,7 +167,7 @@
 			},
 			"Properties": {
 				"textinputformat.record.delimiter": ",",
-				"compression": "",
+				"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 				"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 			},
 			"Compressed": false,

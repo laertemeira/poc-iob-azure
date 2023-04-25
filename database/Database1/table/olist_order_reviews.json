@@ -20,12 +20,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "order_id",
@@ -35,12 +34,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "review_score",
@@ -49,13 +47,11 @@
 						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
-						"Length": 0,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "integer"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "review_comment_title",
@@ -65,12 +61,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "review_comment_message",
@@ -80,12 +75,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "review_creation_date",
@@ -95,12 +89,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "review_answer_timestamp",
@@ -110,12 +103,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "_sourcefile",
@@ -125,12 +117,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				}
 			],
 			"ColumnSetEntityName": "512720b8-9b51-4691-b5a3-3a3046ace7f0",
@@ -154,7 +145,7 @@
 			},
 			"Properties": {
 				"textinputformat.record.delimiter": ",",
-				"compression": "",
+				"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 				"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 			},
 			"Compressed": false,

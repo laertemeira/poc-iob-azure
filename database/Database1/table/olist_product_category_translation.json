@@ -20,12 +20,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "product_category_name_english",
@@ -35,12 +34,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				},
 				{
 					"Name": "_sourcefile",
@@ -50,12 +48,11 @@
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Length": 8000,
-						"Precision": 0,
-						"Scale": 0,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
 						}
-					}
+					},
+					"DeltaFormatInvalidMessages": []
 				}
 			],
 			"ColumnSetEntityName": "0fb80d52-da87-4364-bf16-4a06243d9cab",
@@ -79,7 +76,7 @@
 			},
 			"Properties": {
 				"textinputformat.record.delimiter": ",",
-				"compression": "",
+				"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 				"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 			},
 			"Compressed": false,
