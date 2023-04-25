@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'securityToken' of 'SalesforceLM'"
 		},
+		"mysqlmetadata_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'mysqlmetadata'"
+		},
 		"ws-pociob-WorkspaceDefaultSqlServer_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ws-pociob-WorkspaceDefaultSqlServer'",
@@ -35,6 +39,10 @@
 		"SalesforceLM_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "laertemeira@myself.sandbox"
+		},
+		"akvMySQLMD_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://mdControlVault.vault.azure.net/"
 		},
 		"ws-pociob-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
@@ -1709,7 +1717,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "01_BRONZE_OLIST"
+					"name": "OUTROS"
 				},
 				"annotations": [],
 				"lastPublishTime": "2023-04-21T03:43:10Z"
@@ -3165,7 +3173,7 @@
 					}
 				},
 				"folder": {
-					"name": "02_SILVER_OLIST"
+					"name": "OUTROS"
 				},
 				"annotations": [],
 				"lastPublishTime": "2023-04-21T03:44:26Z"
@@ -3263,6 +3271,93 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/dataflows/df_02_SILVER_Clean_OlistGCP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_FACT_ORDERS')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "dfFact",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_03_GOLD_FACT_ORDERS",
+								"type": "DataFlowReference",
+								"parameters": {
+									"Directory": {
+										"value": "'@{pipeline().parameters.TargetDirectory}'",
+										"type": "Expression"
+									},
+									"FilePrefix": {
+										"value": "'@{pipeline().parameters.FileName}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"srcOrders": {
+										"Directory": {
+											"value": "@{pipeline().parameters.SourceDirectory}/olist_customers_dataset",
+											"type": "Expression"
+										}
+									},
+									"snkFact": {
+										"Directory": {
+											"value": "@pipeline().parameters.TargetDirectory",
+											"type": "Expression"
+										},
+										"Table": {
+											"value": "@pipeline().parameters.FileName",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "FACT_ORDERS"
+					},
+					"SourceDirectory": {
+						"type": "string",
+						"defaultValue": "SILVER_OLIST"
+					},
+					"TargetDirectory": {
+						"type": "string",
+						"defaultValue": "GOLD_OLIST"
+					}
+				},
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_FACT_ORDERS')]"
 			]
 		},
 		{
@@ -3806,6 +3901,31 @@
 						"typeProperties": {
 							"waitTimeInSeconds": 1
 						}
+					},
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "waiFimSilver",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_03_GOLD_FACT_ORDERS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "FACT_ORDERS",
+								"SourceDirectory": "SILVER_OLIST",
+								"TargetDirectory": "GOLD_OLIST"
+							}
+						}
 					}
 				],
 				"policy": {
@@ -3828,7 +3948,8 @@
 				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_CategoryName')]",
 				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Products')]",
 				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Sellers')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]"
+				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_03_GOLD_FACT_ORDERS')]"
 			]
 		},
 		{
@@ -3924,7 +4045,7 @@
 					}
 				},
 				"folder": {
-					"name": "01_BRONZE_OLIST"
+					"name": "OUTROS"
 				},
 				"annotations": [],
 				"type": "AzureSqlDWTable",
@@ -4287,7 +4408,7 @@
 					}
 				},
 				"folder": {
-					"name": "01_BRONZE_OLIST"
+					"name": "OUTROS"
 				},
 				"annotations": [],
 				"type": "Parquet",
@@ -4460,7 +4581,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "01_BRONZE_OLIST"
+					"name": "OUTROS"
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
@@ -4481,7 +4602,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "01_BRONZE_OLIST"
+					"name": "OUTROS"
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
@@ -4541,7 +4662,7 @@
 					}
 				},
 				"folder": {
-					"name": "02_SILVER_OLIST"
+					"name": "OUTROS"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -4668,7 +4789,7 @@
 					}
 				},
 				"folder": {
-					"name": "02_SILVER_OLIST"
+					"name": "OUTROS"
 				},
 				"annotations": [],
 				"type": "Parquet",
@@ -4955,7 +5076,7 @@
 					}
 				},
 				"folder": {
-					"name": "02_SILVER_OLIST"
+					"name": "OUTROS"
 				},
 				"annotations": [],
 				"type": "Parquet",
@@ -4986,7 +5107,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "03_GOLD_OLIST"
+					"name": "OUTROS"
 				},
 				"annotations": [],
 				"type": "Parquet",
@@ -5014,7 +5135,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "03_GOLD_OLIST"
+					"name": "OUTROS"
 				},
 				"annotations": [],
 				"type": "Parquet",
@@ -5023,6 +5144,81 @@
 						"type": "AzureBlobFSLocation",
 						"folderPath": "dimensions",
 						"fileSystem": "pociobcleansed"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/ws-pociob-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ds_03_GOLD_Read_OlistSilver_Parquet')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Directory": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@{dataset().Directory}",
+							"type": "Expression"
+						},
+						"fileSystem": "pociobcleansed"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/ws-pociob-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ds_03_GOLD_Write_OlistGold_Parquet')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Directory": {
+						"type": "string"
+					},
+					"Table": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@{dataset().Directory}/@{dataset().Table}",
+							"type": "Expression"
+						},
+						"fileSystem": "pociobprocess"
 					},
 					"compressionCodec": "snappy"
 				},
@@ -5090,6 +5286,38 @@
 						"value": "[parameters('SalesforceLM_securityToken')]"
 					},
 					"apiVersion": "57.0"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/akvMySQLMD')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('akvMySQLMD_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/mysqlmetadata')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "MySql",
+				"typeProperties": {
+					"connectionString": "[parameters('mysqlmetadata_connectionString')]"
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",
@@ -5296,6 +5524,9 @@
 						"     rowUrlColumn: '_sourcefile',",
 						"     format: 'parquet') ~> srcOlistParquet",
 						"srcOlistParquet derive(each(match(type==\"string\"&&name!=\"_sourcefile\"), $$ = lower(trim($$))),",
+						"          each(match(type==\"string\"&&endsWith(name,\"date\")), $$ = toDate(toString($$))),",
+						"          each(match(type==\"string\"&&endsWith(name,\"timestamp\")), $$ = toTimestamp(toString($$))),",
+						"          each(match(type==\"string\"&&endsWith(name,\"_at\")), $$ = toTimestamp(toString($$))),",
 						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> dcTrimLowerStrings",
 						"dcTrimLowerStrings sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
@@ -5404,7 +5635,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"folder": {
-					"name": "02_SILVER_OLIST"
+					"name": "OUTROS"
 				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
@@ -5709,6 +5940,119 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_FACT_ORDERS')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "srcOrders"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "snkFact",
+							"rejectedDataLinkedService": {
+								"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "colTransform"
+						},
+						{
+							"name": "selFactLayout"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     Directory as string,",
+						"     FilePrefix as string",
+						"}",
+						"source(output(",
+						"          order_id as string,",
+						"          customer_id as string,",
+						"          order_status as string,",
+						"          order_purchase_timestamp as string,",
+						"          order_approved_at as string,",
+						"          order_delivered_carrier_date as string,",
+						"          order_delivered_customer_date as string,",
+						"          order_estimated_delivery_date as string,",
+						"          {_sourcefile} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: true,",
+						"     format: 'parquet') ~> srcOrders",
+						"srcOrders derive(ID_ORDER = order_id,",
+						"          ID_CUSTOMER = customer_id,",
+						"          TM_PURCHASE = toTimestamp(order_purchase_timestamp),",
+						"          TM_APROVED = toTimestamp(order_approved_at),",
+						"          DT_DELIVERED_CARRIER = toDate(order_delivered_carrier_date),",
+						"          DT_DEVLIVERED_CUSTOMER = toDate(order_delivered_customer_date),",
+						"          DT_DELIFVERY_ESTIMATE = toDate(order_estimated_delivery_date),",
+						"          DS_STATUS = order_status,",
+						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> colTransform",
+						"colTransform select(mapColumn(",
+						"          ID_ORDER = order_id,",
+						"          ID_CUSTOMER = customer_id,",
+						"          TM_PURCHASE,",
+						"          TM_APROVED,",
+						"          DT_DELIVERED_CARRIER,",
+						"          DT_DEVLIVERED_CUSTOMER,",
+						"          DT_DELIFVERY_ESTIMATE,",
+						"          DS_STATUS = order_status,",
+						"          {_sourcefile},",
+						"          {_watermark}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selFactLayout",
+						"selFactLayout sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     rowUrlColumn:'_watermark',",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          ID_ORDER,",
+						"          ID_CUSTOMER,",
+						"          TM_PURCHASE,",
+						"          TM_APROVED,",
+						"          DT_DELIVERED_CARRIER,",
+						"          DT_DEVLIVERED_CUSTOMER,",
+						"          DT_DELIFVERY_ESTIMATE,",
+						"          DS_STATUS,",
+						"          {_sourcefile},",
+						"          {_watermark}",
+						"     )) ~> snkFact"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]",
+				"[concat(variables('workspaceId'), '/linkedServices/ws-pociob-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
 			"type": "Microsoft.Synapse/workspaces/credentials",
 			"apiVersion": "2019-06-01-preview",
@@ -5770,6 +6114,86 @@
 					},
 					"currentConnection": {
 						"databaseName": "Database1",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 4')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT TOP (100) [order_id]\n,[customer_id]\n,[order_status]\n,cast([order_purchase_timestamp] as datetime) as order_purchased\n,cast([order_approved_at] as datetime) as order_approved_at\n,cast([order_delivered_carrier_date] as datetime) as order_delivered_carrier_date\n,cast([order_delivered_customer_date] as datetime) as order_delivered_customer_date\n,cast([order_estimated_delivery_date] as datetime) as order_estimated_delivery_date\n,[_sourcefile]\n FROM [Database1].[dbo].[olist_orders]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "Database1",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 5')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "Database1",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 6')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "Database2",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 7')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "Database2",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -5998,9 +6422,6 @@
 											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
@@ -6013,9 +6434,6 @@
 											"TypeName": "float",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
@@ -6028,9 +6446,6 @@
 											"TypeName": "float",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
@@ -6044,8 +6459,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6059,8 +6472,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6074,8 +6485,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6103,7 +6512,7 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
@@ -6163,8 +6572,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6177,9 +6584,6 @@
 											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
@@ -6193,8 +6597,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6208,8 +6610,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6223,8 +6623,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6237,9 +6635,6 @@
 											"TypeName": "float",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
@@ -6252,9 +6647,6 @@
 											"TypeName": "float",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
@@ -6268,8 +6660,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6297,7 +6687,7 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
@@ -6357,8 +6747,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6371,9 +6759,6 @@
 											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
@@ -6387,8 +6772,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6401,9 +6784,6 @@
 											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
@@ -6416,9 +6796,6 @@
 											"TypeName": "float",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
@@ -6432,8 +6809,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6461,7 +6836,7 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
@@ -6521,8 +6896,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6536,8 +6909,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6550,9 +6921,6 @@
 											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
@@ -6566,8 +6934,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6581,8 +6947,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6596,8 +6960,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6611,8 +6973,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6626,8 +6986,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6655,7 +7013,7 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
@@ -6698,25 +7056,23 @@
 						"NewEntity": {
 							"Name": "olist_orders",
 							"EntityType": "TABLE",
-							"TableType": "EXTERNAL",
 							"Namespace": {
-								"SchemaName": null,
-								"DatabaseName": "Database1",
-								"DatabaseId": null
+								"DatabaseName": "Database1"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
 							},
 							"StorageDescriptor": {
-								"Distribution": null,
 								"Columns": [
 									{
 										"Name": "order_id",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6724,14 +7080,11 @@
 									},
 									{
 										"Name": "customer_id",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6739,14 +7092,11 @@
 									},
 									{
 										"Name": "order_status",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6754,14 +7104,11 @@
 									},
 									{
 										"Name": "order_purchase_timestamp",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6769,14 +7116,11 @@
 									},
 									{
 										"Name": "order_approved_at",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6784,14 +7128,11 @@
 									},
 									{
 										"Name": "order_delivered_carrier_date",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6799,14 +7140,11 @@
 									},
 									{
 										"Name": "order_delivered_customer_date",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6814,14 +7152,11 @@
 									},
 									{
 										"Name": "order_estimated_delivery_date",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6829,21 +7164,17 @@
 									},
 									{
 										"Name": "_sourcefile",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
 										}
 									}
 								],
-								"ColumnSetEntityName": "8d6c9ea0-5693-42d1-8f55-4182e7222220",
 								"Format": {
 									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
 									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
@@ -6864,38 +7195,21 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"compression": "",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
-								"SerDeInfo": null,
 								"IsStoredAsSubdirectories": false
 							},
-							"Owner": null,
-							"CreateTime": 0,
-							"LastAccessTime": 0,
-							"Retention": 0,
-							"Temporary": false,
-							"IsRewriteEnabled": false,
-							"ViewOriginalText": null,
-							"ViewExpandedText": null,
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"OriginObjectId": null,
-							"IsSharedEntity": false,
-							"PublishStatus": "PUBLISHED",
 							"Properties": {
 								"Description": "",
 								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
 								"PrimaryKeys": "",
-								"spark.sql.sources.provider": "parquet",
-								"spark.sql.sources.schema.numParts": "1",
-								"spark.sql.sources.schema.part.0": "{\"type\":\"struct\",\"fields\":[{\"name\":\"order_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"customer_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"order_status\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"order_purchase_timestamp\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"order_approved_at\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"order_delivered_carrier_date\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"order_delivered_customer_date\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"order_estimated_delivery_date\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_sourcefile\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}"
+								"spark.sql.sources.provider": "parquet"
 							},
-							"ObjectVersion": 2,
-							"ObjectId": "dae718a0-8a83-4a75-851f-b15c68aa8367",
-							"Description": ""
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
 						},
 						"Source": {
 							"Type": "SPARK"
@@ -6924,8 +7238,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6939,8 +7251,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6954,8 +7264,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -6983,7 +7291,7 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
@@ -7043,8 +7351,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -7058,8 +7364,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -7072,9 +7376,6 @@
 											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
@@ -7087,9 +7388,6 @@
 											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
@@ -7102,9 +7400,6 @@
 											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
@@ -7117,9 +7412,6 @@
 											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
@@ -7132,9 +7424,6 @@
 											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
@@ -7147,9 +7436,6 @@
 											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
@@ -7162,9 +7448,6 @@
 											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
@@ -7178,8 +7461,6 @@
 											"IsComplexType": false,
 											"IsNullable": true,
 											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
@@ -7207,7 +7488,7 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
@@ -7394,6 +7675,273 @@
 						}
 					}
 				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/GOLD_OLIST')]",
+			"type": "Microsoft.Synapse/workspaces/databases",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"Ddls": [
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "GOLD_OLIST",
+							"EntityType": "DATABASE",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"Properties": {
+								"IsSyMSCDMDatabase": true
+							},
+							"Source": {
+								"Provider": "ADLS",
+								"Location": "abfss://pociobprimaryfs@pocioblake.dfs.core.windows.net/GOLD_OLIST",
+								"Properties": {
+									"FormatType": "parquet",
+									"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage"
+								}
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "FACT_ORDERS",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "GOLD_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "ID_ORDER",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "ID_CUSTOMER",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "TM_PURCHASE",
+										"OriginDataTypeName": {
+											"TypeName": "timestamp",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+												"HIVE_TYPE_STRING": "timestamp"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "TM_APROVED",
+										"OriginDataTypeName": {
+											"TypeName": "timestamp",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+												"HIVE_TYPE_STRING": "timestamp"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "DT_DELIVERED_CARRIER",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "DT_DEVLIVERED_CUSTOMER",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "DT_DELIFVERY_ESTIMATE",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "DS_STATUS",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "_sourcefile",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/FACT_ORDERS",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/FACT_ORDERS",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 8')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "GOLD_OLIST",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 9')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "GOLD_OLIST",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 10')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "GOLD_OLIST",
+						"poolName": "Built-in"
+					}
+				}
 			},
 			"dependsOn": []
 		}

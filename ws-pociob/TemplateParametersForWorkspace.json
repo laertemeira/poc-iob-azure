@@ -17,6 +17,9 @@
 		"SalesforceLM_securityToken": {
 			"value": ""
 		},
+		"mysqlmetadata_connectionString": {
+			"value": ""
+		},
 		"ws-pociob-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:ws-pociob.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
@@ -25,6 +28,9 @@
 		},
 		"SalesforceLM_properties_typeProperties_username": {
 			"value": "laertemeira@myself.sandbox"
+		},
+		"akvMySQLMD_properties_typeProperties_baseUrl": {
+			"value": "https://mdControlVault.vault.azure.net/"
 		},
 		"ws-pociob-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://pocioblake.dfs.core.windows.net"
