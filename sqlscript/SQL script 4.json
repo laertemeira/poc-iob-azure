@@ -2,7 +2,7 @@
 	"name": "SQL script 4",
 	"properties": {
 		"content": {
-			"query": "SELECT TOP (100) [order_id]\n,[customer_id]\n,[order_status]\n,[order_purchase_timestamp]\n,[order_approved_at]\n,[order_delivered_carrier_date]\n,[order_delivered_customer_date]\n,[order_estimated_delivery_date]\n,[_sourcefile]\n FROM [Database1].[dbo].[olist_orders]",
+			"query": "SELECT TOP (100) [order_id]\n,[customer_id]\n,[order_status]\n,cast([order_purchase_timestamp] as datetime) as order_purchased\n,cast([order_approved_at] as datetime) as order_approved_at\n,cast([order_delivered_carrier_date] as datetime) as order_delivered_carrier_date\n,cast([order_delivered_customer_date] as datetime) as order_delivered_customer_date\n,cast([order_estimated_delivery_date] as datetime) as order_estimated_delivery_date\n,[_sourcefile]\n FROM [Database1].[dbo].[olist_orders]",
 			"metadata": {
 				"language": "sql"
 			},
