@@ -30,7 +30,10 @@
 			],
 			"transformations": [
 				{
-					"name": "derivedColumn1"
+					"name": "colTransform"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -50,12 +53,26 @@
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> srcOrders",
 				"srcOrders derive(ID_ORDER = order_id,",
+				"          ID_CUSTOMER = customer_id,",
 				"          TM_PURCHASE = toTimestamp(order_purchase_timestamp),",
 				"          TM_APROVED = toTimestamp(order_approved_at),",
 				"          DT_DELIVERED_CARRIER = toDate(order_delivered_carrier_date),",
 				"          DT_DEVLIVERED_CUSTOMER = toDate(order_delivered_customer_date),",
-				"          DT_DELIFVERY_ESTIMATE = toDate(order_estimated_delivery_date)) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"          DT_DELIFVERY_ESTIMATE = toDate(order_estimated_delivery_date),",
+				"          DS_STATUS = order_status) ~> colTransform",
+				"colTransform select(mapColumn(",
+				"          ID_ORDER,",
+				"          ID_CUSTOMER,",
+				"          TM_PURCHASE,",
+				"          TM_APROVED,",
+				"          DT_DELIVERED_CARRIER,",
+				"          DT_DEVLIVERED_CUSTOMER,",
+				"          DT_DELIFVERY_ESTIMATE,",
+				"          {_sourcefile}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     umask: 0022,",
