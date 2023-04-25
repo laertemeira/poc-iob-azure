@@ -528,6 +528,26 @@
 				"typeProperties": {
 					"waitTimeInSeconds": 1
 				}
+			},
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "waiFimSilver",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_03_GOLD_FACT_ORDERS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"folder": {
