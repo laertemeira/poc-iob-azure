@@ -546,7 +546,12 @@
 						"referenceName": "pip_03_GOLD_FACT_ORDERS",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileName": "FACT_ORDERS",
+						"SourceDirectory": "SILVER_OLIST",
+						"TargetDirectory": "GOLD_OLIST"
+					}
 				}
 			}
 		],
