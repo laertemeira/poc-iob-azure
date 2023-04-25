@@ -2,7 +2,7 @@
 	"name": "SQL script 11",
 	"properties": {
 		"content": {
-			"query": "SELECT TOP (100) [ID_ORDER]\n,[ID_CUSTOMER]\n,[TM_PURCHASE]\n,[TM_APROVED]\n,[DT_DELIVERED_CARRIER]\n,[DT_DELIVERED_CUSTOMER]\n,[DT_DELIVERY_ESTIMATE]\n,[DS_STATUS]\n,[_sourcefile]\n FROM [GOLD_OLIST].[dbo].[FACT_ORDERS]",
+			"query": "SELECT TOP (100) *\n FROM [GOLD_OLIST].[dbo].[FACT_ORDERS]",
 			"metadata": {
 				"language": "sql"
 			},
