@@ -8,6 +8,9 @@
 		"parameters": {
 			"cw_table": {
 				"type": "String"
+			},
+			"cw_datefilter": {
+				"type": "string"
 			}
 		},
 		"folder": {

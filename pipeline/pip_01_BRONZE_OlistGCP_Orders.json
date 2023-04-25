@@ -17,6 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"sqlReaderQuery": "",
 						"isolationLevel": "ReadCommitted",
 						"partitionOption": "None"
 					},
