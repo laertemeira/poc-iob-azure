@@ -6004,19 +6004,19 @@
 						"          TM_PURCHASE = toTimestamp(order_purchase_timestamp),",
 						"          TM_APROVED = toTimestamp(order_approved_at),",
 						"          DT_DELIVERED_CARRIER = toDate(order_delivered_carrier_date),",
-						"          DT_DEVLIVERED_CUSTOMER = toDate(order_delivered_customer_date),",
-						"          DT_DELIFVERY_ESTIMATE = toDate(order_estimated_delivery_date),",
-						"          DS_STATUS = order_status,",
+						"          DT_DELIVERED_CUSTOMER = toDate(order_delivered_customer_date),",
+						"          DT_DELIVERY_ESTIMATE = toDate(order_estimated_delivery_date),",
+						"          DS_STATUS = initCap(order_status),",
 						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> colTransform",
 						"colTransform select(mapColumn(",
-						"          ID_ORDER = order_id,",
-						"          ID_CUSTOMER = customer_id,",
+						"          ID_ORDER,",
+						"          ID_CUSTOMER,",
 						"          TM_PURCHASE,",
 						"          TM_APROVED,",
 						"          DT_DELIVERED_CARRIER,",
-						"          DT_DEVLIVERED_CUSTOMER,",
-						"          DT_DELIFVERY_ESTIMATE,",
-						"          DS_STATUS = order_status,",
+						"          DT_DELIVERED_CUSTOMER,",
+						"          DT_DELIVERY_ESTIMATE,",
+						"          DS_STATUS,",
 						"          {_sourcefile},",
 						"          {_watermark}",
 						"     ),",
@@ -6026,23 +6026,12 @@
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     rowUrlColumn:'_watermark',",
+						"     truncate: true,",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          ID_ORDER,",
-						"          ID_CUSTOMER,",
-						"          TM_PURCHASE,",
-						"          TM_APROVED,",
-						"          DT_DELIVERED_CARRIER,",
-						"          DT_DEVLIVERED_CUSTOMER,",
-						"          DT_DELIFVERY_ESTIMATE,",
-						"          DS_STATUS,",
-						"          {_sourcefile},",
-						"          {_watermark}",
-						"     )) ~> snkFact"
+						"     skipDuplicateMapOutputs: true) ~> snkFact"
 					]
 				}
 			},
@@ -6075,6 +6064,26 @@
 					"currentConnection": {
 						"databaseName": "Olist",
 						"poolName": "Olist"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 10')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT TOP (100) *\n FROM [GOLD_OLIST].[dbo].[FACT_ORDERS]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "GOLD_OLIST",
+						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
 				},
@@ -6194,6 +6203,46 @@
 					},
 					"currentConnection": {
 						"databaseName": "Database2",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 8')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "GOLD_OLIST",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 9')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "GOLD_OLIST",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -7791,7 +7840,7 @@
 										"DeltaFormatInvalidMessages": []
 									},
 									{
-										"Name": "DT_DEVLIVERED_CUSTOMER",
+										"Name": "DT_DELIVERED_CUSTOMER",
 										"OriginDataTypeName": {
 											"TypeName": "date",
 											"IsComplexType": false,
@@ -7804,7 +7853,7 @@
 										"DeltaFormatInvalidMessages": []
 									},
 									{
-										"Name": "DT_DELIFVERY_ESTIMATE",
+										"Name": "DT_DELIVERY_ESTIMATE",
 										"OriginDataTypeName": {
 											"TypeName": "date",
 											"IsComplexType": false,
@@ -7884,64 +7933,6 @@
 						}
 					}
 				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 8')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "GOLD_OLIST",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 9')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "GOLD_OLIST",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 10')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "GOLD_OLIST",
-						"poolName": "Built-in"
-					}
-				}
 			},
 			"dependsOn": []
 		}
