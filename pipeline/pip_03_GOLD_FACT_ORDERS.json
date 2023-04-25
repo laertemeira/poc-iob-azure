@@ -20,7 +20,7 @@
 						"type": "DataFlowReference",
 						"parameters": {
 							"Directory": {
-								"value": "'@{pipeline().parameters.TargetDirectory}/@{pipeline().parameters.FileName}'",
+								"value": "'@{pipeline().parameters.TargetDirectory}'",
 								"type": "Expression"
 							},
 							"FilePrefix": {
