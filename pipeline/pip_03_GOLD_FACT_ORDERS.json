@@ -18,10 +18,20 @@
 					"dataflow": {
 						"referenceName": "df_03_GOLD_FACT_ORDERS",
 						"type": "DataFlowReference",
+						"parameters": {
+							"Directory": {
+								"value": "'@{pipeline().parameters.TargetDirectory}/@{pipeline().parameters.FileName}'",
+								"type": "Expression"
+							},
+							"FilePrefix": {
+								"value": "'@{pipeline().parameters.FileName}'",
+								"type": "Expression"
+							}
+						},
 						"datasetParameters": {
 							"srcOrders": {
 								"Directory": {
-									"value": "@{pipeline().parameters.SourceDirectory}/@{pipeline().parameters.FileName}",
+									"value": "@{pipeline().parameters.SourceDirectory}/olist_customer_dataset",
 									"type": "Expression"
 								}
 							},
