@@ -1,0 +1,106 @@
+{
+	"name": "ds_01_BRONZE_Extract_SQLSales",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQLCarSales",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Schema": {
+				"type": "string"
+			},
+			"Table": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "OUTROS"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "index",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "brand",
+				"type": "varchar"
+			},
+			{
+				"name": "name",
+				"type": "varchar"
+			},
+			{
+				"name": "bodyType",
+				"type": "varchar"
+			},
+			{
+				"name": "color",
+				"type": "varchar"
+			},
+			{
+				"name": "fuelType",
+				"type": "varchar"
+			},
+			{
+				"name": "year",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "mileage",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "transmission",
+				"type": "varchar"
+			},
+			{
+				"name": "power",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "price",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "vehicleConfiguration",
+				"type": "varchar"
+			},
+			{
+				"name": "engineName",
+				"type": "varchar"
+			},
+			{
+				"name": "engineDisplacement",
+				"type": "varchar"
+			},
+			{
+				"name": "date",
+				"type": "varchar"
+			},
+			{
+				"name": "location",
+				"type": "varchar"
+			},
+			{
+				"name": "link",
+				"type": "varchar"
+			},
+			{
+				"name": "parse_date",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "sales"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

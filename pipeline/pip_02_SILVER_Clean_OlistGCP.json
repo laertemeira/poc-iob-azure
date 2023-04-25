@@ -1,0 +1,82 @@
+{
+	"name": "pip_02_SILVER_Clean_OlistGCP",
+	"properties": {
+		"activities": [
+			{
+				"name": "Clean OLIST",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_02_SILVER_Clean_OlistGCP",
+						"type": "DataFlowReference",
+						"parameters": {
+							"FilePrefix": {
+								"value": "'@{pipeline().parameters.FileName}'",
+								"type": "Expression"
+							},
+							"Directory": {
+								"value": "'@{pipeline().parameters.TargetDirectory}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"srcOlistParquet": {
+								"Directory": {
+									"value": "@pipeline().parameters.SourceDirectory",
+									"type": "Expression"
+								},
+								"File": {
+									"value": "@pipeline().parameters.FileName",
+									"type": "Expression"
+								}
+							},
+							"snkOlistParquet2": {
+								"Directory": {
+									"value": "@pipeline().parameters.TargetDirectory",
+									"type": "Expression"
+								},
+								"File": {
+									"value": "@pipeline().parameters.FileName",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"FileName": {
+				"type": "string"
+			},
+			"TargetDirectory": {
+				"type": "string",
+				"defaultValue": "SILVER_OLIST"
+			},
+			"SourceDirectory": {
+				"type": "string",
+				"defaultValue": "BRONZE_OLIST"
+			}
+		},
+		"folder": {
+			"name": "02_SILVER_OLIST"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-04-21T03:44:21Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

@@ -1,0 +1,28 @@
+{
+	"name": "ds_01_BRONZE_Extract_OlistGCP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OlistSQLGCP",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"cw_table": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "01_BRONZE_OLIST"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().cw_table",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

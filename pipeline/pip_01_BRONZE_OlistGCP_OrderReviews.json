@@ -1,0 +1,171 @@
+{
+	"name": "pip_01_BRONZE_OlistGCP_OrderReviews",
+	"properties": {
+		"activities": [
+			{
+				"name": "cpy_OrderReviews",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"isolationLevel": "ReadCommitted",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"enableSkipIncompatibleRow": true,
+					"validateDataConsistency": false,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+								"type": "LinkedServiceReference"
+							},
+							"path": "pociobrawlanding/SQLOlist/log"
+						}
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "review_id",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "review_id",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "order_id",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "order_id",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "review_score",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "review_score",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "review_comment_title",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "review_comment_title",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "review_comment_message",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "review_comment_message",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "review_creation_date",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "review_creation_date",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "review_answer_timestamp",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "review_answer_timestamp",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_01_BRONZE_Extract_OlistGCP",
+						"type": "DatasetReference",
+						"parameters": {
+							"cw_table": "olist_order_reviews_dataset"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_01_BRONZE_Ingest_OlistGCP",
+						"type": "DatasetReference",
+						"parameters": {
+							"cw_fileName": "olist_order_reviews_dataset"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "01_BRONZE_OLIST"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-04-21T03:42:51Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

@@ -1,0 +1,37 @@
+{
+	"name": "ds_02_SILVER_RawFiles_SalesForce",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ptable": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "OUTROS"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().ptable",
+					"type": "Expression"
+				},
+				"folderPath": "SalesForce",
+				"fileSystem": "pociobrawlanding"
+			},
+			"columnDelimiter": "|",
+			"rowDelimiter": "\n",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

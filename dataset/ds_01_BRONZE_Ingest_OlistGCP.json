@@ -1,0 +1,33 @@
+{
+	"name": "ds_01_BRONZE_Ingest_OlistGCP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"cw_fileName": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "01_BRONZE_OLIST"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat(dataset().cw_fileName, '.parquet')",
+					"type": "Expression"
+				},
+				"folderPath": "BRONZE_OLIST",
+				"fileSystem": "pociobrawlanding"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

@@ -1,0 +1,44 @@
+{
+	"name": "ds_01_BRONZE_Extract_Olist_Customers",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ws-pociob-WorkspaceDefaultSqlServer",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DBName": "Olist"
+			}
+		},
+		"folder": {
+			"name": "OUTROS"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "customer_id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "customer_unique_id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "customer_zip_code_prefix",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "customer_city",
+				"type": "nvarchar"
+			},
+			{
+				"name": "customer_state",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"tableName": "dbo.olist_customers_dataset"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

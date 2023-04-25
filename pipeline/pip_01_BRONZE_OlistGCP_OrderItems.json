@@ -1,0 +1,171 @@
+{
+	"name": "pip_01_BRONZE_OlistGCP_OrderItems",
+	"properties": {
+		"activities": [
+			{
+				"name": "cpy_OrderItems",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"isolationLevel": "ReadCommitted",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"enableSkipIncompatibleRow": true,
+					"validateDataConsistency": false,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+								"type": "LinkedServiceReference"
+							},
+							"path": "pociobrawlanding/SQLOlist/log"
+						}
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "order_id",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "order_id",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "order_item_id",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "order_item_id",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "product_id",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "product_id",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "seller_id",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "seller_id",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "shipping_limit_date",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "shipping_limit_date",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "price",
+									"type": "Single",
+									"physicalType": "real"
+								},
+								"sink": {
+									"name": "price",
+									"type": "Single",
+									"physicalType": "FLOAT"
+								}
+							},
+							{
+								"source": {
+									"name": "freight_value",
+									"type": "Single",
+									"physicalType": "real"
+								},
+								"sink": {
+									"name": "freight_value",
+									"type": "Single",
+									"physicalType": "FLOAT"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_01_BRONZE_Extract_OlistGCP",
+						"type": "DatasetReference",
+						"parameters": {
+							"cw_table": "olist_order_items_dataset"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_01_BRONZE_Ingest_OlistGCP",
+						"type": "DatasetReference",
+						"parameters": {
+							"cw_fileName": "olist_order_items_dataset"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "01_BRONZE_OLIST"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-04-21T03:42:44Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

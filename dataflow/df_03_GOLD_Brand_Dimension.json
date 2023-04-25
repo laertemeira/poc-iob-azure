@@ -1,0 +1,100 @@
+{
+	"name": "df_03_GOLD_Brand_Dimension",
+	"properties": {
+		"folder": {
+			"name": "OUTROS"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_02_SILVER_Read_SQLSales_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "srcSales"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+						"type": "LinkedServiceReference"
+					},
+					"name": "BrandDimension"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selBrand"
+				},
+				{
+					"name": "rnkBrand"
+				},
+				{
+					"name": "aggBrand"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     ptable as string",
+				"}",
+				"source(output(",
+				"          index as long,",
+				"          brand as string,",
+				"          name as string,",
+				"          bodyType as string,",
+				"          color as string,",
+				"          fuelType as string,",
+				"          year as double,",
+				"          mileage as double,",
+				"          transmission as string,",
+				"          power as double,",
+				"          price as long,",
+				"          vehicleConfiguration as string,",
+				"          engineName as string,",
+				"          engineDisplacement as string,",
+				"          date as string,",
+				"          location as string,",
+				"          link as string,",
+				"          parse_date as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: true,",
+				"     moveFiles: ['','Processed'],",
+				"     format: 'parquet',",
+				"     wildcardPaths:['cpyDeltaPipeSales*.parquet']) ~> srcSales",
+				"srcSales select(mapColumn(",
+				"          brand",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selBrand",
+				"selBrand rank(asc(brand, true),",
+				"     output(brandRank as long),",
+				"     dense: true) ~> rnkBrand",
+				"rnkBrand aggregate(groupBy(brand),",
+				"     brandId = max(brandRank)) ~> aggBrand",
+				"aggBrand sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'pociobcleansed',",
+				"     folderPath: 'dimensions',",
+				"     mergeSchema: true,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> BrandDimension"
+			]
+		}
+	}
+}

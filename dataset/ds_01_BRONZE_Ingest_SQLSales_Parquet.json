@@ -1,0 +1,97 @@
+{
+	"name": "ds_01_BRONZE_Ingest_SQLSales_Parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "OUTROS"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "SQLSales",
+				"fileSystem": "pociobrawlanding"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "index",
+				"type": "INT64"
+			},
+			{
+				"name": "brand",
+				"type": "UTF8"
+			},
+			{
+				"name": "name",
+				"type": "UTF8"
+			},
+			{
+				"name": "bodyType",
+				"type": "UTF8"
+			},
+			{
+				"name": "color",
+				"type": "UTF8"
+			},
+			{
+				"name": "fuelType",
+				"type": "UTF8"
+			},
+			{
+				"name": "year",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "mileage",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "transmission",
+				"type": "UTF8"
+			},
+			{
+				"name": "power",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "price",
+				"type": "INT64"
+			},
+			{
+				"name": "vehicleConfiguration",
+				"type": "UTF8"
+			},
+			{
+				"name": "engineName",
+				"type": "UTF8"
+			},
+			{
+				"name": "engineDisplacement",
+				"type": "UTF8"
+			},
+			{
+				"name": "date",
+				"type": "UTF8"
+			},
+			{
+				"name": "location",
+				"type": "UTF8"
+			},
+			{
+				"name": "link",
+				"type": "UTF8"
+			},
+			{
+				"name": "parse_date",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

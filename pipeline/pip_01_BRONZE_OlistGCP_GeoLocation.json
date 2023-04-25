@@ -1,0 +1,147 @@
+{
+	"name": "pip_01_BRONZE_OlistGCP_GeoLocation",
+	"properties": {
+		"activities": [
+			{
+				"name": "cpy_GeoLocation",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"isolationLevel": "ReadCommitted",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"enableSkipIncompatibleRow": true,
+					"validateDataConsistency": false,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+								"type": "LinkedServiceReference"
+							},
+							"path": "pociobrawlanding/SQLOlist/log"
+						}
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "geolocation_zip_code_prefix",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "geolocation_zip_code_prefix",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "geolocation_lat",
+									"type": "Single",
+									"physicalType": "real"
+								},
+								"sink": {
+									"name": "geolocation_lat",
+									"type": "Single",
+									"physicalType": "FLOAT"
+								}
+							},
+							{
+								"source": {
+									"name": "geolocation_lng",
+									"type": "Single",
+									"physicalType": "real"
+								},
+								"sink": {
+									"name": "geolocation_lng",
+									"type": "Single",
+									"physicalType": "FLOAT"
+								}
+							},
+							{
+								"source": {
+									"name": "geolocation_city",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "geolocation_city",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "geolocation_state",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "geolocation_state",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_01_BRONZE_Extract_OlistGCP",
+						"type": "DatasetReference",
+						"parameters": {
+							"cw_table": "olist_geolocation_dataset"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_01_BRONZE_Ingest_OlistGCP",
+						"type": "DatasetReference",
+						"parameters": {
+							"cw_fileName": "olist_geolocation_dataset"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "01_BRONZE_OLIST"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-04-21T03:42:42Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

@@ -1,0 +1,24 @@
+{
+	"name": "Trigger_3b5",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pip_01_BRONZE_SQLOlist_AllTabs",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 24,
+				"startTime": "2023-04-20T14:14:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

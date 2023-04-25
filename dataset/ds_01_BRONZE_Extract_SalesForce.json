@@ -1,0 +1,27 @@
+{
+	"name": "ds_01_BRONZE_Extract_SalesForce",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SalesforceLM",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"cw_objectApiName": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "OUTROS"
+		},
+		"annotations": [],
+		"type": "SalesforceObject",
+		"schema": [],
+		"typeProperties": {
+			"objectApiName": {
+				"value": "@dataset().cw_objectApiName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

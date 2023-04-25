@@ -1,0 +1,58 @@
+{
+	"name": "df_02_SILVER_Clean_SalesForce",
+	"properties": {
+		"folder": {
+			"name": "OUTROS"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_02_SILVER_RawFiles_SalesForce",
+						"type": "DatasetReference"
+					},
+					"name": "srcSalesForceCSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_02_SILVER_SalesForce_CSV",
+						"type": "DatasetReference"
+					},
+					"name": "snkWriteParquet",
+					"rejectedDataLinkedService": {
+						"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "dcTrimLowerStrings"
+				}
+			],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: true,",
+				"     moveFiles: ['SalesForce','Processed'],",
+				"     rowUrlColumn: '_filename',",
+				"     skipLines: 1) ~> srcSalesForceCSV",
+				"srcSalesForceCSV derive(each(match(type==\"string\"), $$ = lower(trim($$))),",
+				"          {_loadtime} = currentTimestamp()) ~> dcTrimLowerStrings",
+				"dcTrimLowerStrings sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     rowUrlColumn:'_filename',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1) ~> snkWriteParquet"
+			]
+		}
+	}
+}

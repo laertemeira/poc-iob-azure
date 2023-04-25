@@ -1,0 +1,16 @@
+{
+	"name": "ds_01_BRONZE_OlistSQLGCP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OlistSQLGCP",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "01_BRONZE_OLIST"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

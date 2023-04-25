@@ -1,0 +1,148 @@
+{
+	"name": "ds_01_BRONZE_Extract_Olist_SysObjects",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ws-pociob-WorkspaceDefaultSqlServer",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DBName": "Olist"
+			}
+		},
+		"folder": {
+			"name": "01_BRONZE_OLIST"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "xtype",
+				"type": "char"
+			},
+			{
+				"name": "uid",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "info",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "status",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "base_schema_ver",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "replinfo",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "parent_obj",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "crdate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ftcatid",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "schema_ver",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stats_schema_ver",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "type",
+				"type": "char"
+			},
+			{
+				"name": "userstat",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "sysstat",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "indexdel",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "refdate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "version",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "deltrig",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "instrig",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "updtrig",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "seltrig",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "category",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "cache",
+				"type": "smallint",
+				"precision": 5
+			}
+		],
+		"typeProperties": {
+			"schema": "sys",
+			"table": "sysobjects"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

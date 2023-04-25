@@ -1,0 +1,26 @@
+{
+	"name": "pipEventualOlistCustomer",
+	"properties": {
+		"activities": [
+			{
+				"name": "Ingest Customer",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_01_BRONZE_OlistGCP_Customers",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "00_MASTER/Controle_Individual/BRONZE"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-04-24T20:13:03Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
