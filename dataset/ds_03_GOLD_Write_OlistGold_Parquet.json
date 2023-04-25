@@ -21,6 +21,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@{dataset().Directory}/@{dataset().Table}",
+					"type": "Expression"
+				},
 				"fileSystem": "pociobprocess"
 			},
 			"compressionCodec": "snappy"
