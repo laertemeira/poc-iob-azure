@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "ws-pociob"
+		},
+		"OlistSQLGCP_connectionString": {
+			"value": ""
+		},
+		"SQLCarSales_connectionString": {
+			"value": ""
+		},
+		"SalesforceLM_password": {
+			"value": ""
+		},
+		"SalesforceLM_securityToken": {
+			"value": ""
+		},
+		"ws-pociob-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:ws-pociob.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"SalesforceLM_properties_typeProperties_environmentUrl": {
+			"value": "https://login.salesforce.com"
+		},
+		"SalesforceLM_properties_typeProperties_username": {
+			"value": "laertemeira@myself.sandbox"
+		},
+		"ws-pociob-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://pocioblake.dfs.core.windows.net"
+		},
+		"Trigger_j4z_properties_pip_01_BRONZE_SalesForce_parameters_windowStart": {
+			"value": "@{addminutes(trigger().scheduledTime, -15)}"
+		},
+		"Trigger_j4z_properties_pip_01_BRONZE_SalesForce_parameters_windowEnd": {
+			"value": "@trigger().scheduledTime"
+		}
+	}
+}
