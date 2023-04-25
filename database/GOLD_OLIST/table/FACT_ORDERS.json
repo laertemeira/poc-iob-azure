@@ -79,11 +79,11 @@
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "DT_DEVLIVERED_CUSTOMER",
+					"Name": "DT_DELIVERED_CUSTOMER",
 					"OriginDataTypeName": {
 						"TypeName": "date",
-						"IsComplexType": false,
 						"IsNullable": true,
+						"IsComplexType": false,
 						"Properties": {
 							"DateFormat": "YYYY-MM-DD",
 							"HIVE_TYPE_STRING": "date"
@@ -92,11 +92,11 @@
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "DT_DELIFVERY_ESTIMATE",
+					"Name": "DT_DELIVERY_ESTIMATE",
 					"OriginDataTypeName": {
 						"TypeName": "date",
-						"IsComplexType": false,
 						"IsNullable": true,
+						"IsComplexType": false,
 						"Properties": {
 							"DateFormat": "YYYY-MM-DD",
 							"HIVE_TYPE_STRING": "date"
