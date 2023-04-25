@@ -2,7 +2,7 @@
 	"name": "df_02_SILVER_Clean_SQL_Olist",
 	"properties": {
 		"folder": {
-			"name": "02_SILVER_OLIST"
+			"name": "OUTROS"
 		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
