@@ -1,0 +1,129 @@
+{
+	"name": "olist_order_reviews",
+	"properties": {
+		"Name": "olist_order_reviews",
+		"EntityType": "TABLE",
+		"Namespace": {
+			"DatabaseName": "02_SILVER_OLIST"
+		},
+		"Description": "",
+		"TableType": "EXTERNAL",
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"StorageDescriptor": {
+			"Columns": [
+				{
+					"Name": "order_id",
+					"OriginDataTypeName": {
+						"TypeName": "string",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Length": 8000,
+						"Properties": {
+							"HIVE_TYPE_STRING": "string"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "payment_sequential",
+					"OriginDataTypeName": {
+						"TypeName": "integer",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Properties": {
+							"HIVE_TYPE_STRING": "integer"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "payment_type",
+					"OriginDataTypeName": {
+						"TypeName": "string",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Length": 8000,
+						"Properties": {
+							"HIVE_TYPE_STRING": "string"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "payment_installments",
+					"OriginDataTypeName": {
+						"TypeName": "integer",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Properties": {
+							"HIVE_TYPE_STRING": "integer"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "payment_value",
+					"OriginDataTypeName": {
+						"TypeName": "float",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Properties": {
+							"HIVE_TYPE_STRING": "float"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "_sourcefile",
+					"OriginDataTypeName": {
+						"TypeName": "string",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Length": 8000,
+						"Properties": {
+							"HIVE_TYPE_STRING": "string"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				}
+			],
+			"Format": {
+				"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+				"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+				"FormatType": "parquet",
+				"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+				"Properties": {
+					"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_order_payments_dataset",
+					"FormatTypeSetToDatabaseDefault": false
+				}
+			},
+			"Source": {
+				"Provider": "ADLS",
+				"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_order_payments_dataset",
+				"Properties": {
+					"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+					"LocationSetToDatabaseDefault": false
+				}
+			},
+			"Properties": {
+				"textinputformat.record.delimiter": ",",
+				"compression": "",
+				"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+			},
+			"Compressed": false,
+			"IsStoredAsSubdirectories": false
+		},
+		"Properties": {
+			"Description": "",
+			"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+			"PrimaryKeys": "",
+			"spark.sql.sources.provider": "parquet"
+		},
+		"Retention": 0,
+		"Temporary": false,
+		"IsRewriteEnabled": false
+	},
+	"type": "TABLE"
+}
