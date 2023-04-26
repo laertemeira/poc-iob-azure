@@ -60,12 +60,15 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"FileName": "FACT_ORDERS",
-						"SourceDirectory": "SILVER_OLIST/olist_orders_dataset/",
-						"TargetDirectory": "GOLD_OLIST/FACT_ORDERS/"
+						"SourceDirectory": "SILVER_OLIST",
+						"TargetDirectory": "GOLD_OLIST"
 					}
 				}
 			}
 		],
+		"folder": {
+			"name": "00_MASTER/Controle_Individual"
+		},
 		"annotations": []
 	}
 }
