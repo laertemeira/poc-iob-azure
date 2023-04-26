@@ -3506,6 +3506,228 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/pip_00_Master_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Exec Customers Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_Customers_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec Products Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_Products_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec GeoLocation Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_GeoLocation_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec Sellers Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_Sellers_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec CategoryName Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_CategoryNameTranslation_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec Orders Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "wait Dims Facts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_Orders_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "wait Dims Facts",
+						"type": "Wait",
+						"dependsOn": [
+							{
+								"activity": "Exec Customers Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Exec Products Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Exec GeoLocation Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Exec Sellers Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Exec CategoryName Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					},
+					{
+						"name": "Exec OrderItems Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "wait Dims Facts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_OrderItems_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec OrderPayments Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "wait Dims Facts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_OrderPayments_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec OrderReviews Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "wait Dims Facts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_OrderReviews_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_Customers_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_Products_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_GeoLocation_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_Sellers_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_CategoryNameTranslation_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_Orders_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_OrderItems_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_OrderPayments_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_OrderReviews_Olist')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/pip_Master_Olist_Old')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -4144,228 +4366,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/pip_Master_Olist_New')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Exec Customers Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_Customers_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec Products Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_Products_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec GeoLocation Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_GeoLocation_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec Sellers Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_Sellers_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec CategoryName Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_CategoryNameTranslation_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec Orders Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "waiDimFacts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_Orders_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "waiDimFacts",
-						"type": "Wait",
-						"dependsOn": [
-							{
-								"activity": "Exec Customers Olist",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Exec Products Olist",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Exec GeoLocation Olist",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Exec Sellers Olist",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Exec CategoryName Olist",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"waitTimeInSeconds": 1
-						}
-					},
-					{
-						"name": "Exec OrderItems Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "waiDimFacts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_OrderItems_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec OrderPayments Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "waiDimFacts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_OrderPayments_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec OrderReviews Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "waiDimFacts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_OrderReviews_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "00_MASTER"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/pip_Customers_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_Products_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_GeoLocation_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_Sellers_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_CategoryNameTranslation_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_Orders_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_OrderItems_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_OrderPayments_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_OrderReviews_Olist')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/pip_OrderItems_Olist')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -4543,6 +4543,92 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_OrderReviews')]",
 				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_Orders_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Ingest Orders",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_01_BRONZE_OlistGCP_Orders",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Clean Orders",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Ingest Orders",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "olist_orders_dataset",
+								"TargetDirectory": "SILVER_OLIST",
+								"SourceDirectory": "BRONZE_OLIST"
+							}
+						}
+					},
+					{
+						"name": "process Orders",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Clean Orders",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_03_GOLD_FACT_ORDERS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "FACT_ORDERS",
+								"SourceDirectory": "SILVER_OLIST",
+								"TargetDirectory": "GOLD_OLIST"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER/Controle_Individual"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Orders')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_03_GOLD_FACT_ORDERS')]"
 			]
 		},
 		{
@@ -6851,12 +6937,12 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "SELECT TOP (100) *\n FROM [GOLD_OLIST].[dbo].[FACT_ORDERS]",
+					"query": "SELECT TOP (100) *\n FROM [03_GOLD_OLIST].[dbo].[FACT_ORDERS]",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "GOLD_OLIST",
+						"databaseName": "03_GOLD_OLIST",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -6877,6 +6963,46 @@
 					},
 					"currentConnection": {
 						"databaseName": "Database1",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 13')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT  *\nFROM    [03_GOLD_OLIS]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "03_GOLD_OLIST",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 14')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "03_GOLD_OLIST",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -7264,6 +7390,1124 @@
 						"Source": {
 							"Type": "SPARK"
 						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "olist_customers",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "01_BRONZE_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "customer_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "customer_unique_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "customer_zip_code_prefix",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "customer_city",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "customer_state",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_customers_dataset.parquet",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_customers_dataset.parquet",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "olist_geolocation",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "01_BRONZE_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "geolocation_zip_code_prefix",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "geolocation_lat",
+										"OriginDataTypeName": {
+											"TypeName": "float",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "float"
+											}
+										}
+									},
+									{
+										"Name": "geolocation_lng",
+										"OriginDataTypeName": {
+											"TypeName": "float",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "float"
+											}
+										}
+									},
+									{
+										"Name": "geolocation_city",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "geolocation_state",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_geolocation_dataset.parquet",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_geolocation_dataset.parquet",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "olist_order_items",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "01_BRONZE_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "order_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "order_item_id",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "product_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "seller_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "shipping_limit_date",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "price",
+										"OriginDataTypeName": {
+											"TypeName": "float",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "float"
+											}
+										}
+									},
+									{
+										"Name": "freight_value",
+										"OriginDataTypeName": {
+											"TypeName": "float",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "float"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_order_items_dataset.parquet",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_order_items_dataset.parquet",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "olist_order_payments",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "01_BRONZE_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "order_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "payment_sequential",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "payment_type",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "payment_installments",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "payment_value",
+										"OriginDataTypeName": {
+											"TypeName": "float",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "float"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_order_payments_dataset.parquet",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_order_payments_dataset.parquet",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "olist_order_reviews",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "01_BRONZE_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "review_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "order_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "review_score",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "review_comment_title",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "review_comment_message",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "review_creation_date",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "review_answer_timestamp",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_order_reviews_dataset.parquet",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_order_reviews_dataset.parquet",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "olist_orders",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "01_BRONZE_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "order_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "customer_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "order_status",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "order_purchase_timestamp",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "order_approved_at",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "order_delivered_carrier_date",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "order_delivered_customer_date",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "order_estimated_delivery_date",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_orders_dataset.parquet",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_orders_dataset.parquet",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "olist_product_category_translation",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "01_BRONZE_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "product_category_name",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "product_category_name_english",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/product_category_name_translation.parquet",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/product_category_name_translation.parquet",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "olist_products",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "01_BRONZE_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "product_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "product_category_name",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "product_name_lenght",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "product_description_lenght",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "product_photos_qty",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "product_weight_g",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "product_length_cm",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "product_height_cm",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "product_width_cm",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_products_dataset.parquet",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_products_dataset.parquet",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "olist_sellers",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "01_BRONZE_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "seller_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "seller_zip_code_prefix",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "seller_city",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "seller_state",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_sellers_dataset.parquet",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST/olist_sellers_dataset.parquet",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
 					}
 				]
 			},
@@ -7408,7 +8652,7 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
@@ -7534,7 +8778,7 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
@@ -7549,557 +8793,6 @@
 							"Retention": 0,
 							"Temporary": false,
 							"IsRewriteEnabled": false
-						},
-						"Source": {
-							"Type": "SPARK"
-						}
-					},
-					{
-						"ActionType": "CREATE",
-						"OldEntity": null,
-						"NewEntity": {
-							"Name": "olist_orders",
-							"EntityType": "TABLE",
-							"Namespace": {
-								"DatabaseName": "02_SILVER_OLIST"
-							},
-							"Description": "",
-							"TableType": "EXTERNAL",
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"StorageDescriptor": {
-								"Columns": [
-									{
-										"Name": "order_id",
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "customer_id",
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "order_status",
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "order_purchase_timestamp",
-										"OriginDataTypeName": {
-											"TypeName": "timestamp",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
-												"HIVE_TYPE_STRING": "timestamp"
-											}
-										}
-									},
-									{
-										"Name": "order_approved_at",
-										"OriginDataTypeName": {
-											"TypeName": "timestamp",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
-												"HIVE_TYPE_STRING": "timestamp"
-											}
-										}
-									},
-									{
-										"Name": "order_delivered_carrier_date",
-										"OriginDataTypeName": {
-											"TypeName": "date",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"DateFormat": "YYYY-MM-DD",
-												"HIVE_TYPE_STRING": "date"
-											}
-										}
-									},
-									{
-										"Name": "order_delivered_customer_date",
-										"OriginDataTypeName": {
-											"TypeName": "date",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"DateFormat": "YYYY-MM-DD",
-												"HIVE_TYPE_STRING": "date"
-											}
-										}
-									},
-									{
-										"Name": "order_estimated_delivery_date",
-										"OriginDataTypeName": {
-											"TypeName": "date",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"DateFormat": "YYYY-MM-DD",
-												"HIVE_TYPE_STRING": "date"
-											}
-										}
-									},
-									{
-										"Name": "_sourcefile",
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									}
-								],
-								"Format": {
-									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
-									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
-									"FormatType": "parquet",
-									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
-									"Properties": {
-										"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_orders_dataset",
-										"FormatTypeSetToDatabaseDefault": false
-									}
-								},
-								"Source": {
-									"Provider": "ADLS",
-									"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_orders_dataset",
-									"Properties": {
-										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
-										"LocationSetToDatabaseDefault": false
-									}
-								},
-								"Properties": {
-									"textinputformat.record.delimiter": ",",
-									"compression": "",
-									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
-								},
-								"Compressed": false,
-								"IsStoredAsSubdirectories": false
-							},
-							"Properties": {
-								"Description": "",
-								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
-								"PrimaryKeys": "",
-								"spark.sql.sources.provider": "parquet"
-							},
-							"Retention": 0,
-							"Temporary": false,
-							"IsRewriteEnabled": false
-						},
-						"Source": {
-							"Type": "SPARK"
-						}
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/03_GOLD_OLIST')]",
-			"type": "Microsoft.Synapse/workspaces/databases",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"Ddls": [
-					{
-						"ActionType": "CREATE",
-						"OldEntity": null,
-						"NewEntity": {
-							"Name": "03_GOLD_OLIST",
-							"EntityType": "DATABASE",
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"Properties": {
-								"IsSyMSCDMDatabase": true
-							},
-							"Source": {
-								"Provider": "ADLS",
-								"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST",
-								"Properties": {
-									"FormatType": "parquet",
-									"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage"
-								}
-							}
-						},
-						"Source": {
-							"Type": "SPARK"
-						}
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Database1')]",
-			"type": "Microsoft.Synapse/workspaces/databases",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"Ddls": [
-					{
-						"ActionType": "CREATE",
-						"OldEntity": null,
-						"NewEntity": {
-							"Name": "Database1",
-							"EntityType": "DATABASE",
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"Properties": {
-								"IsSyMSCDMDatabase": true
-							},
-							"Source": {
-								"Provider": "ADLS",
-								"Location": "abfss://pociobprimaryfs@pocioblake.dfs.core.windows.net/Database1",
-								"Properties": {
-									"FormatType": "csv",
-									"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage"
-								}
-							},
-							"PublishStatus": "PUBLISHED",
-							"ObjectVersion": 9,
-							"ObjectId": "3df30b5f-95be-440f-9edc-20f327a3eaaf"
-						},
-						"Source": {
-							"Type": "SPARK"
-						}
-					},
-					{
-						"ActionType": "CREATE",
-						"OldEntity": null,
-						"NewEntity": {
-							"Name": "olist_customers",
-							"EntityType": "TABLE",
-							"TableType": "EXTERNAL",
-							"Namespace": {
-								"SchemaName": null,
-								"DatabaseName": "Database1",
-								"DatabaseId": null
-							},
-							"StorageDescriptor": {
-								"Distribution": null,
-								"Columns": [
-									{
-										"Name": "customer_id",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "customer_unique_id",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "customer_zip_code_prefix",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "integer",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
-											"Properties": {
-												"HIVE_TYPE_STRING": "integer"
-											}
-										}
-									},
-									{
-										"Name": "customer_city",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "customer_state",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "_sourcefile",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									}
-								],
-								"ColumnSetEntityName": "1babc960-0029-45dc-90e6-8c1ce337e198",
-								"Format": {
-									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
-									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
-									"FormatType": "parquet",
-									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
-									"Properties": {
-										"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_customers_dataset",
-										"FormatTypeSetToDatabaseDefault": false
-									}
-								},
-								"Source": {
-									"Provider": "ADLS",
-									"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_customers_dataset",
-									"Properties": {
-										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
-										"LocationSetToDatabaseDefault": false
-									}
-								},
-								"Properties": {
-									"textinputformat.record.delimiter": ",",
-									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
-									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
-								},
-								"Compressed": false,
-								"SerDeInfo": null,
-								"IsStoredAsSubdirectories": false
-							},
-							"Owner": null,
-							"CreateTime": 0,
-							"LastAccessTime": 0,
-							"Retention": 0,
-							"Temporary": false,
-							"IsRewriteEnabled": false,
-							"ViewOriginalText": null,
-							"ViewExpandedText": null,
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"OriginObjectId": null,
-							"IsSharedEntity": false,
-							"PublishStatus": "PUBLISHED",
-							"Properties": {
-								"Description": "",
-								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
-								"PrimaryKeys": "",
-								"spark.sql.sources.provider": "parquet",
-								"spark.sql.sources.schema.numParts": "1",
-								"spark.sql.sources.schema.part.0": "{\"type\":\"struct\",\"fields\":[{\"name\":\"customer_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"customer_unique_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"customer_zip_code_prefix\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"customer_city\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"customer_state\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_sourcefile\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}"
-							},
-							"ObjectVersion": 3,
-							"ObjectId": "f22ea46f-27ec-4b0d-bf27-2eb97dcfbef7",
-							"Description": ""
-						},
-						"Source": {
-							"Type": "SPARK"
-						}
-					},
-					{
-						"ActionType": "CREATE",
-						"OldEntity": null,
-						"NewEntity": {
-							"Name": "olist_geolocation",
-							"EntityType": "TABLE",
-							"TableType": "EXTERNAL",
-							"Namespace": {
-								"SchemaName": null,
-								"DatabaseName": "Database1",
-								"DatabaseId": null
-							},
-							"StorageDescriptor": {
-								"Distribution": null,
-								"Columns": [
-									{
-										"Name": "geolocation_zip_code_prefix",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "integer",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"HIVE_TYPE_STRING": "integer"
-											}
-										}
-									},
-									{
-										"Name": "geolocation_lat",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "float",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"HIVE_TYPE_STRING": "float"
-											}
-										}
-									},
-									{
-										"Name": "geolocation_lng",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "float",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"HIVE_TYPE_STRING": "float"
-											}
-										}
-									},
-									{
-										"Name": "geolocation_city",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "geolocation_state",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "_sourcefile",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									}
-								],
-								"ColumnSetEntityName": "a175a74e-9bbe-468d-a9f0-01636f2bb7f5",
-								"Format": {
-									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
-									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
-									"FormatType": "parquet",
-									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
-									"Properties": {
-										"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_geolocation_dataset",
-										"FormatTypeSetToDatabaseDefault": false
-									}
-								},
-								"Source": {
-									"Provider": "ADLS",
-									"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_geolocation_dataset",
-									"Properties": {
-										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
-										"LocationSetToDatabaseDefault": false
-									}
-								},
-								"Properties": {
-									"textinputformat.record.delimiter": ",",
-									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
-									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
-								},
-								"Compressed": false,
-								"SerDeInfo": null,
-								"IsStoredAsSubdirectories": false
-							},
-							"Owner": null,
-							"CreateTime": 0,
-							"LastAccessTime": 0,
-							"Retention": 0,
-							"Temporary": false,
-							"IsRewriteEnabled": false,
-							"ViewOriginalText": null,
-							"ViewExpandedText": null,
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"OriginObjectId": null,
-							"IsSharedEntity": false,
-							"PublishStatus": "PUBLISHED",
-							"Properties": {
-								"Description": "",
-								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
-								"PrimaryKeys": "",
-								"spark.sql.sources.provider": "parquet",
-								"spark.sql.sources.schema.numParts": "1",
-								"spark.sql.sources.schema.part.0": "{\"type\":\"struct\",\"fields\":[{\"name\":\"geolocation_zip_code_prefix\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"geolocation_lat\",\"type\":\"float\",\"nullable\":true,\"metadata\":{}},{\"name\":\"geolocation_lng\",\"type\":\"float\",\"nullable\":true,\"metadata\":{}},{\"name\":\"geolocation_city\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"geolocation_state\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_sourcefile\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}"
-							},
-							"ObjectVersion": 1,
-							"ObjectId": "a23682bb-e359-4099-90cb-b8aa2df83c3c",
-							"Description": ""
 						},
 						"Source": {
 							"Type": "SPARK"
@@ -8111,18 +8804,18 @@
 						"NewEntity": {
 							"Name": "olist_order_items",
 							"EntityType": "TABLE",
-							"TableType": "EXTERNAL",
 							"Namespace": {
-								"SchemaName": null,
-								"DatabaseName": "Database1",
-								"DatabaseId": null
+								"DatabaseName": "02_SILVER_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
 							},
 							"StorageDescriptor": {
-								"Distribution": null,
 								"Columns": [
 									{
 										"Name": "order_id",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8135,7 +8828,6 @@
 									},
 									{
 										"Name": "order_item_id",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -8147,7 +8839,6 @@
 									},
 									{
 										"Name": "product_id",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8160,7 +8851,6 @@
 									},
 									{
 										"Name": "seller_id",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8173,20 +8863,18 @@
 									},
 									{
 										"Name": "shipping_limit_date",
-										"Description": null,
 										"OriginDataTypeName": {
-											"TypeName": "string",
+											"TypeName": "date",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 8000,
 											"Properties": {
-												"HIVE_TYPE_STRING": "string"
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
 											}
 										}
 									},
 									{
 										"Name": "price",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "float",
 											"IsComplexType": false,
@@ -8198,7 +8886,6 @@
 									},
 									{
 										"Name": "freight_value",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "float",
 											"IsComplexType": false,
@@ -8210,7 +8897,6 @@
 									},
 									{
 										"Name": "_sourcefile",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8222,7 +8908,6 @@
 										}
 									}
 								],
-								"ColumnSetEntityName": "98cceb4e-1b17-4325-a89b-223a1031cb96",
 								"Format": {
 									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
 									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
@@ -8243,38 +8928,21 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"compression": "",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
-								"SerDeInfo": null,
 								"IsStoredAsSubdirectories": false
 							},
-							"Owner": null,
-							"CreateTime": 0,
-							"LastAccessTime": 0,
-							"Retention": 0,
-							"Temporary": false,
-							"IsRewriteEnabled": false,
-							"ViewOriginalText": null,
-							"ViewExpandedText": null,
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"OriginObjectId": null,
-							"IsSharedEntity": false,
-							"PublishStatus": "PUBLISHED",
 							"Properties": {
 								"Description": "",
 								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
 								"PrimaryKeys": "",
-								"spark.sql.sources.provider": "parquet",
-								"spark.sql.sources.schema.numParts": "1",
-								"spark.sql.sources.schema.part.0": "{\"type\":\"struct\",\"fields\":[{\"name\":\"order_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"order_item_id\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"product_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"seller_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"shipping_limit_date\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"price\",\"type\":\"float\",\"nullable\":true,\"metadata\":{}},{\"name\":\"freight_value\",\"type\":\"float\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_sourcefile\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}"
+								"spark.sql.sources.provider": "parquet"
 							},
-							"ObjectVersion": 1,
-							"ObjectId": "7bc60873-ec2d-4c33-be09-4fc56966365c",
-							"Description": ""
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
 						},
 						"Source": {
 							"Type": "SPARK"
@@ -8286,18 +8954,18 @@
 						"NewEntity": {
 							"Name": "olist_order_payments",
 							"EntityType": "TABLE",
-							"TableType": "EXTERNAL",
 							"Namespace": {
-								"SchemaName": null,
-								"DatabaseName": "Database1",
-								"DatabaseId": null
+								"DatabaseName": "02_SILVER_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
 							},
 							"StorageDescriptor": {
-								"Distribution": null,
 								"Columns": [
 									{
 										"Name": "order_id",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8310,7 +8978,6 @@
 									},
 									{
 										"Name": "payment_sequential",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -8322,7 +8989,6 @@
 									},
 									{
 										"Name": "payment_type",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8335,7 +9001,6 @@
 									},
 									{
 										"Name": "payment_installments",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -8347,7 +9012,6 @@
 									},
 									{
 										"Name": "payment_value",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "float",
 											"IsComplexType": false,
@@ -8359,7 +9023,6 @@
 									},
 									{
 										"Name": "_sourcefile",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8371,7 +9034,6 @@
 										}
 									}
 								],
-								"ColumnSetEntityName": "cbb88824-5fa6-4401-83f0-def98ddce342",
 								"Format": {
 									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
 									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
@@ -8392,38 +9054,21 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"compression": "",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
-								"SerDeInfo": null,
 								"IsStoredAsSubdirectories": false
 							},
-							"Owner": null,
-							"CreateTime": 0,
-							"LastAccessTime": 0,
-							"Retention": 0,
-							"Temporary": false,
-							"IsRewriteEnabled": false,
-							"ViewOriginalText": null,
-							"ViewExpandedText": null,
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"OriginObjectId": null,
-							"IsSharedEntity": false,
-							"PublishStatus": "PUBLISHED",
 							"Properties": {
 								"Description": "",
 								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
 								"PrimaryKeys": "",
-								"spark.sql.sources.provider": "parquet",
-								"spark.sql.sources.schema.numParts": "1",
-								"spark.sql.sources.schema.part.0": "{\"type\":\"struct\",\"fields\":[{\"name\":\"order_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"payment_sequential\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"payment_type\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"payment_installments\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"payment_value\",\"type\":\"float\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_sourcefile\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}"
+								"spark.sql.sources.provider": "parquet"
 							},
-							"ObjectVersion": 1,
-							"ObjectId": "2cad2bc6-8698-4569-bdee-abc400c41285",
-							"Description": ""
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
 						},
 						"Source": {
 							"Type": "SPARK"
@@ -8435,31 +9080,18 @@
 						"NewEntity": {
 							"Name": "olist_order_reviews",
 							"EntityType": "TABLE",
-							"TableType": "EXTERNAL",
 							"Namespace": {
-								"SchemaName": null,
-								"DatabaseName": "Database1",
-								"DatabaseId": null
+								"DatabaseName": "02_SILVER_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
 							},
 							"StorageDescriptor": {
-								"Distribution": null,
 								"Columns": [
 									{
-										"Name": "review_id",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
 										"Name": "order_id",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8471,8 +9103,7 @@
 										}
 									},
 									{
-										"Name": "review_score",
-										"Description": null,
+										"Name": "payment_sequential",
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -8483,8 +9114,7 @@
 										}
 									},
 									{
-										"Name": "review_comment_title",
-										"Description": null,
+										"Name": "payment_type",
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8496,47 +9126,29 @@
 										}
 									},
 									{
-										"Name": "review_comment_message",
-										"Description": null,
+										"Name": "payment_installments",
 										"OriginDataTypeName": {
-											"TypeName": "string",
+											"TypeName": "integer",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 8000,
 											"Properties": {
-												"HIVE_TYPE_STRING": "string"
+												"HIVE_TYPE_STRING": "integer"
 											}
 										}
 									},
 									{
-										"Name": "review_creation_date",
-										"Description": null,
+										"Name": "payment_value",
 										"OriginDataTypeName": {
-											"TypeName": "string",
+											"TypeName": "float",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 8000,
 											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "review_answer_timestamp",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
+												"HIVE_TYPE_STRING": "float"
 											}
 										}
 									},
 									{
 										"Name": "_sourcefile",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8548,20 +9160,19 @@
 										}
 									}
 								],
-								"ColumnSetEntityName": "512720b8-9b51-4691-b5a3-3a3046ace7f0",
 								"Format": {
 									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
 									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
 									"FormatType": "parquet",
 									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
 									"Properties": {
-										"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_order_reviews_dataset",
+										"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_order_payments_dataset",
 										"FormatTypeSetToDatabaseDefault": false
 									}
 								},
 								"Source": {
 									"Provider": "ADLS",
-									"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_order_reviews_dataset",
+									"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_order_payments_dataset",
 									"Properties": {
 										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
 										"LocationSetToDatabaseDefault": false
@@ -8569,38 +9180,21 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"compression": "",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
-								"SerDeInfo": null,
 								"IsStoredAsSubdirectories": false
 							},
-							"Owner": null,
-							"CreateTime": 0,
-							"LastAccessTime": 0,
-							"Retention": 0,
-							"Temporary": false,
-							"IsRewriteEnabled": false,
-							"ViewOriginalText": null,
-							"ViewExpandedText": null,
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"OriginObjectId": null,
-							"IsSharedEntity": false,
-							"PublishStatus": "PUBLISHED",
 							"Properties": {
 								"Description": "",
 								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
 								"PrimaryKeys": "",
-								"spark.sql.sources.provider": "parquet",
-								"spark.sql.sources.schema.numParts": "1",
-								"spark.sql.sources.schema.part.0": "{\"type\":\"struct\",\"fields\":[{\"name\":\"review_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"order_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"review_score\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"review_comment_title\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"review_comment_message\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"review_creation_date\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"review_answer_timestamp\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_sourcefile\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}"
+								"spark.sql.sources.provider": "parquet"
 							},
-							"ObjectVersion": 1,
-							"ObjectId": "5ec49ec2-5c3b-405d-bac8-396bc61dcc55",
-							"Description": ""
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
 						},
 						"Source": {
 							"Type": "SPARK"
@@ -8613,7 +9207,7 @@
 							"Name": "olist_orders",
 							"EntityType": "TABLE",
 							"Namespace": {
-								"DatabaseName": "Database1"
+								"DatabaseName": "02_SILVER_OLIST"
 							},
 							"Description": "",
 							"TableType": "EXTERNAL",
@@ -8661,60 +9255,60 @@
 									{
 										"Name": "order_purchase_timestamp",
 										"OriginDataTypeName": {
-											"TypeName": "string",
+											"TypeName": "timestamp",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 8000,
 											"Properties": {
-												"HIVE_TYPE_STRING": "string"
+												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+												"HIVE_TYPE_STRING": "timestamp"
 											}
 										}
 									},
 									{
 										"Name": "order_approved_at",
 										"OriginDataTypeName": {
-											"TypeName": "string",
+											"TypeName": "timestamp",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 8000,
 											"Properties": {
-												"HIVE_TYPE_STRING": "string"
+												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+												"HIVE_TYPE_STRING": "timestamp"
 											}
 										}
 									},
 									{
 										"Name": "order_delivered_carrier_date",
 										"OriginDataTypeName": {
-											"TypeName": "string",
+											"TypeName": "date",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 8000,
 											"Properties": {
-												"HIVE_TYPE_STRING": "string"
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
 											}
 										}
 									},
 									{
 										"Name": "order_delivered_customer_date",
 										"OriginDataTypeName": {
-											"TypeName": "string",
+											"TypeName": "date",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 8000,
 											"Properties": {
-												"HIVE_TYPE_STRING": "string"
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
 											}
 										}
 									},
 									{
 										"Name": "order_estimated_delivery_date",
 										"OriginDataTypeName": {
-											"TypeName": "string",
+											"TypeName": "date",
 											"IsComplexType": false,
 											"IsNullable": true,
-											"Length": 8000,
 											"Properties": {
-												"HIVE_TYPE_STRING": "string"
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
 											}
 										}
 									},
@@ -8751,7 +9345,7 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
@@ -8777,18 +9371,18 @@
 						"NewEntity": {
 							"Name": "olist_product_category_translation",
 							"EntityType": "TABLE",
-							"TableType": "EXTERNAL",
 							"Namespace": {
-								"SchemaName": null,
-								"DatabaseName": "Database1",
-								"DatabaseId": null
+								"DatabaseName": "02_SILVER_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
 							},
 							"StorageDescriptor": {
-								"Distribution": null,
 								"Columns": [
 									{
 										"Name": "product_category_name",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8801,7 +9395,6 @@
 									},
 									{
 										"Name": "product_category_name_english",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8814,7 +9407,6 @@
 									},
 									{
 										"Name": "_sourcefile",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8826,7 +9418,6 @@
 										}
 									}
 								],
-								"ColumnSetEntityName": "0fb80d52-da87-4364-bf16-4a06243d9cab",
 								"Format": {
 									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
 									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
@@ -8847,38 +9438,21 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"compression": "",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
-								"SerDeInfo": null,
 								"IsStoredAsSubdirectories": false
 							},
-							"Owner": null,
-							"CreateTime": 0,
-							"LastAccessTime": 0,
-							"Retention": 0,
-							"Temporary": false,
-							"IsRewriteEnabled": false,
-							"ViewOriginalText": null,
-							"ViewExpandedText": null,
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"OriginObjectId": null,
-							"IsSharedEntity": false,
-							"PublishStatus": "PUBLISHED",
 							"Properties": {
 								"Description": "",
 								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
 								"PrimaryKeys": "",
-								"spark.sql.sources.provider": "parquet",
-								"spark.sql.sources.schema.numParts": "1",
-								"spark.sql.sources.schema.part.0": "{\"type\":\"struct\",\"fields\":[{\"name\":\"product_category_name\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"product_category_name_english\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_sourcefile\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}"
+								"spark.sql.sources.provider": "parquet"
 							},
-							"ObjectVersion": 1,
-							"ObjectId": "38efd95b-ca24-40f5-a0b8-962682985d4e",
-							"Description": ""
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
 						},
 						"Source": {
 							"Type": "SPARK"
@@ -8890,18 +9464,18 @@
 						"NewEntity": {
 							"Name": "olist_products",
 							"EntityType": "TABLE",
-							"TableType": "EXTERNAL",
 							"Namespace": {
-								"SchemaName": null,
-								"DatabaseName": "Database1",
-								"DatabaseId": null
+								"DatabaseName": "02_SILVER_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
 							},
 							"StorageDescriptor": {
-								"Distribution": null,
 								"Columns": [
 									{
 										"Name": "product_id",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8914,7 +9488,6 @@
 									},
 									{
 										"Name": "product_category_name",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -8927,7 +9500,6 @@
 									},
 									{
 										"Name": "product_name_lenght",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -8939,7 +9511,6 @@
 									},
 									{
 										"Name": "product_description_lenght",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -8951,7 +9522,6 @@
 									},
 									{
 										"Name": "product_photos_qty",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -8963,7 +9533,6 @@
 									},
 									{
 										"Name": "product_weight_g",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -8975,7 +9544,6 @@
 									},
 									{
 										"Name": "product_length_cm",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -8987,7 +9555,6 @@
 									},
 									{
 										"Name": "product_height_cm",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -8999,7 +9566,6 @@
 									},
 									{
 										"Name": "product_width_cm",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "integer",
 											"IsComplexType": false,
@@ -9011,7 +9577,6 @@
 									},
 									{
 										"Name": "_sourcefile",
-										"Description": null,
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -9023,7 +9588,6 @@
 										}
 									}
 								],
-								"ColumnSetEntityName": "f98325e8-7823-4d12-963e-3664786c203c",
 								"Format": {
 									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
 									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
@@ -9044,38 +9608,21 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"compression": "",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
-								"SerDeInfo": null,
 								"IsStoredAsSubdirectories": false
 							},
-							"Owner": null,
-							"CreateTime": 0,
-							"LastAccessTime": 0,
-							"Retention": 0,
-							"Temporary": false,
-							"IsRewriteEnabled": false,
-							"ViewOriginalText": null,
-							"ViewExpandedText": null,
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"OriginObjectId": null,
-							"IsSharedEntity": false,
-							"PublishStatus": "PUBLISHED",
 							"Properties": {
 								"Description": "",
 								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
 								"PrimaryKeys": "",
-								"spark.sql.sources.provider": "parquet",
-								"spark.sql.sources.schema.numParts": "1",
-								"spark.sql.sources.schema.part.0": "{\"type\":\"struct\",\"fields\":[{\"name\":\"product_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"product_category_name\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"product_name_lenght\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"product_description_lenght\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"product_photos_qty\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"product_weight_g\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"product_length_cm\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"product_height_cm\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"product_width_cm\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_sourcefile\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}"
+								"spark.sql.sources.provider": "parquet"
 							},
-							"ObjectVersion": 1,
-							"ObjectId": "67580954-e99b-4ac9-928a-32ed48867942",
-							"Description": ""
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
 						},
 						"Source": {
 							"Type": "SPARK"
@@ -9087,192 +9634,8 @@
 						"NewEntity": {
 							"Name": "olist_sellers",
 							"EntityType": "TABLE",
-							"TableType": "EXTERNAL",
 							"Namespace": {
-								"SchemaName": null,
-								"DatabaseName": "Database1",
-								"DatabaseId": null
-							},
-							"StorageDescriptor": {
-								"Distribution": null,
-								"Columns": [
-									{
-										"Name": "seller_id",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "seller_zip_code_prefix",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "integer",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 0,
-											"Precision": 0,
-											"Scale": 0,
-											"Properties": {
-												"HIVE_TYPE_STRING": "integer"
-											}
-										}
-									},
-									{
-										"Name": "seller_city",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "seller_state",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									},
-									{
-										"Name": "_sourcefile",
-										"Description": null,
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Precision": 0,
-											"Scale": 0,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										}
-									}
-								],
-								"ColumnSetEntityName": "787d0fc6-9bec-4627-a143-7fe79eddb783",
-								"Format": {
-									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
-									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
-									"FormatType": "parquet",
-									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
-									"Properties": {
-										"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_sellers_dataset/olist_sellers_dataset_20230421034249.parquet",
-										"FormatTypeSetToDatabaseDefault": false
-									}
-								},
-								"Source": {
-									"Provider": "ADLS",
-									"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_sellers_dataset/olist_sellers_dataset_20230421034249.parquet",
-									"Properties": {
-										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
-										"LocationSetToDatabaseDefault": false
-									}
-								},
-								"Properties": {
-									"textinputformat.record.delimiter": ",",
-									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
-									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
-								},
-								"Compressed": false,
-								"SerDeInfo": null,
-								"IsStoredAsSubdirectories": false
-							},
-							"Owner": null,
-							"CreateTime": 0,
-							"LastAccessTime": 0,
-							"Retention": 0,
-							"Temporary": false,
-							"IsRewriteEnabled": false,
-							"ViewOriginalText": null,
-							"ViewExpandedText": null,
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"OriginObjectId": null,
-							"IsSharedEntity": false,
-							"PublishStatus": "PUBLISHED",
-							"Properties": {
-								"Description": "",
-								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
-								"PrimaryKeys": "",
-								"spark.sql.sources.provider": "parquet",
-								"spark.sql.sources.schema.numParts": "1",
-								"spark.sql.sources.schema.part.0": "{\"type\":\"struct\",\"fields\":[{\"name\":\"seller_id\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"seller_zip_code_prefix\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"seller_city\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"seller_state\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_sourcefile\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}"
-							},
-							"ObjectVersion": 2,
-							"ObjectId": "58ae0bbb-814b-42a6-94f2-0990491e81d1",
-							"Description": ""
-						},
-						"Source": {
-							"Type": "SPARK"
-						}
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/GOLD_OLIST')]",
-			"type": "Microsoft.Synapse/workspaces/databases",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"Ddls": [
-					{
-						"ActionType": "CREATE",
-						"OldEntity": null,
-						"NewEntity": {
-							"Name": "GOLD_OLIST",
-							"EntityType": "DATABASE",
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"Properties": {
-								"IsSyMSCDMDatabase": true
-							},
-							"Source": {
-								"Provider": "ADLS",
-								"Location": "abfss://pociobprimaryfs@pocioblake.dfs.core.windows.net/GOLD_OLIST",
-								"Properties": {
-									"FormatType": "parquet",
-									"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage"
-								}
-							}
-						},
-						"Source": {
-							"Type": "SPARK"
-						}
-					},
-					{
-						"ActionType": "CREATE",
-						"OldEntity": null,
-						"NewEntity": {
-							"Name": "FACT_ORDERS",
-							"EntityType": "TABLE",
-							"Namespace": {
-								"DatabaseName": "GOLD_OLIST"
+								"DatabaseName": "02_SILVER_OLIST"
 							},
 							"Description": "",
 							"TableType": "EXTERNAL",
@@ -9282,7 +9645,7 @@
 							"StorageDescriptor": {
 								"Columns": [
 									{
-										"Name": "ID_ORDER",
+										"Name": "seller_id",
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -9294,7 +9657,18 @@
 										}
 									},
 									{
-										"Name": "ID_CUSTOMER",
+										"Name": "seller_zip_code_prefix",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "seller_city",
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -9306,67 +9680,7 @@
 										}
 									},
 									{
-										"Name": "TM_PURCHASE",
-										"OriginDataTypeName": {
-											"TypeName": "timestamp",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
-												"HIVE_TYPE_STRING": "timestamp"
-											}
-										}
-									},
-									{
-										"Name": "TM_APPROVED",
-										"OriginDataTypeName": {
-											"TypeName": "timestamp",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
-												"HIVE_TYPE_STRING": "timestamp"
-											}
-										}
-									},
-									{
-										"Name": "DT_DELIVERED_CARRIER",
-										"OriginDataTypeName": {
-											"TypeName": "date",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"DateFormat": "YYYY-MM-DD",
-												"HIVE_TYPE_STRING": "date"
-											}
-										}
-									},
-									{
-										"Name": "DT_DELIVERED_CUSTOMER",
-										"OriginDataTypeName": {
-											"TypeName": "date",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"DateFormat": "YYYY-MM-DD",
-												"HIVE_TYPE_STRING": "date"
-											}
-										}
-									},
-									{
-										"Name": "DT_DELIVERY_ESTIMATED",
-										"OriginDataTypeName": {
-											"TypeName": "date",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"DateFormat": "YYYY-MM-DD",
-												"HIVE_TYPE_STRING": "date"
-											}
-										}
-									},
-									{
-										"Name": "DS_STATUS",
+										"Name": "seller_state",
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -9396,13 +9710,13 @@
 									"FormatType": "parquet",
 									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
 									"Properties": {
-										"path": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/FACT_ORDERS",
+										"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_sellers_dataset",
 										"FormatTypeSetToDatabaseDefault": false
 									}
 								},
 								"Source": {
 									"Provider": "ADLS",
-									"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/FACT_ORDERS",
+									"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_sellers_dataset",
 									"Properties": {
 										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
 										"LocationSetToDatabaseDefault": false
@@ -9410,7 +9724,7 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"compression": "",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
@@ -9460,90 +9774,253 @@
 			"location": "eastus"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/pip_Orders_Olist')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"name": "[concat(parameters('workspaceName'), '/SQL script 15')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"activities": [
+				"content": {
+					"query": "SELECT  *\nFRP",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "03_GOLD_OLIST",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 16')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT TOP (100) [customer_id]\n,[customer_unique_id]\n,[customer_zip_code_prefix]\n,[customer_city]\n,[customer_state]\n FROM [01_BRONZE_OLIST].[dbo].[olist_customers]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "01_BRONZE_OLIST",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/03_GOLD_OLIST')]",
+			"type": "Microsoft.Synapse/workspaces/databases",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"Ddls": [
 					{
-						"name": "Ingest Orders",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_01_BRONZE_OlistGCP_Orders",
-								"type": "PipelineReference"
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "03_GOLD_OLIST",
+							"EntityType": "DATABASE",
+							"Origin": {
+								"Type": "SPARK"
 							},
-							"waitOnCompletion": true,
-							"parameters": {}
+							"Properties": {
+								"IsSyMSCDMDatabase": true
+							},
+							"Source": {
+								"Provider": "ADLS",
+								"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST",
+								"Properties": {
+									"FormatType": "parquet",
+									"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage"
+								}
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
 						}
 					},
 					{
-						"name": "Clean Orders",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Ingest Orders",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
-								"type": "PipelineReference"
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "FACT_ORDERS",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "03_GOLD_OLIST"
 							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"FileName": "olist_orders_dataset",
-								"TargetDirectory": "SILVER_OLIST",
-								"SourceDirectory": "BRONZE_OLIST"
-							}
-						}
-					},
-					{
-						"name": "process Orders",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Clean Orders",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_03_GOLD_FACT_ORDERS",
-								"type": "PipelineReference"
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
 							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"FileName": "FACT_ORDERS",
-								"SourceDirectory": "SILVER_OLIST",
-								"TargetDirectory": "GOLD_OLIST"
-							}
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "ID_ORDER",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "ID_CUSTOMER",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "TM_PURCHASE",
+										"OriginDataTypeName": {
+											"TypeName": "timestamp",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+												"HIVE_TYPE_STRING": "timestamp"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "TM_APPROVED",
+										"OriginDataTypeName": {
+											"TypeName": "timestamp",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+												"HIVE_TYPE_STRING": "timestamp"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "DT_DELIVERED_CARRIER",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "DT_DELIVERED_CUSTOMER",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "DT_DELIVERY_ESTIMATED",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "DS_STATUS",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "_sourcefile",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"DeltaFormatInvalidMessages": []
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/FACT_ORDERS",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/FACT_ORDERS",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
 						}
 					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "00_MASTER/Controle_Individual"
-				},
-				"annotations": []
+				]
 			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Orders')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_03_GOLD_FACT_ORDERS')]"
-			]
+			"dependsOn": []
 		}
 	]
 }
