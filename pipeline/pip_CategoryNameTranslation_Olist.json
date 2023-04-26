@@ -1,0 +1,46 @@
+{
+	"name": "pip_CategoryNameTranslation_Olist",
+	"properties": {
+		"activities": [
+			{
+				"name": "Ingest Category Name Translations",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_01_BRONZE_OlistGCP_CategoryName",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Clean Category Name Translations",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Ingest Category Name Translations",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileName": "product_category_name_translation",
+						"TargetDirectory": "SILVER_OLIST",
+						"SourceDirectory": "BRONZE_OLIST"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
