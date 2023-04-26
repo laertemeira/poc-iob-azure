@@ -16,9 +16,16 @@
 				}
 			},
 			{
-				"name": "Clean Order Items",
+				"name": "Clean Orders",
 				"type": "ExecutePipeline",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Ingest Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
