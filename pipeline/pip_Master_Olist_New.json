@@ -80,6 +80,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_Orders_Olist",
+						"type": "PipelineReference"
+					},
 					"waitOnCompletion": true
 				}
 			},
