@@ -68,7 +68,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Wait1",
+						"activity": "waiDimFacts",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -84,7 +84,7 @@
 				}
 			},
 			{
-				"name": "Wait1",
+				"name": "waiDimFacts",
 				"type": "Wait",
 				"dependsOn": [
 					{
@@ -128,7 +128,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Wait1",
+						"activity": "waiDimFacts",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -148,7 +148,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Wait1",
+						"activity": "waiDimFacts",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -168,7 +168,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Wait1",
+						"activity": "waiDimFacts",
 						"dependencyConditions": [
 							"Succeeded"
 						]
