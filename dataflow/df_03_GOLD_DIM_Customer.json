@@ -27,6 +27,10 @@
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     Directory as string,",
+				"     FilePrefix as string",
+				"}",
 				"source(output(",
 				"          customer_id as string,",
 				"          customer_unique_id as string,",
@@ -43,7 +47,8 @@
 				"          ID_CUSTOMER_UNIQUE = customer_unique_id,",
 				"          NU_ZIP_CODE_PREFIX = customer_zip_code_prefix,",
 				"          NM_CUSTOMER_CITY = initCap(customer_city),",
-				"          CD_CUSTOMER_STATE = upper(customer_state)) ~> derDimensionColumns",
+				"          CD_CUSTOMER_STATE = upper(customer_state),",
+				"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derDimensionColumns",
 				"derDimensionColumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
