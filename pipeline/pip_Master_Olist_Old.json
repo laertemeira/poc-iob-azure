@@ -1,5 +1,5 @@
 {
-	"name": "pip_Master_Olist",
+	"name": "pip_Master_Olist_Old",
 	"properties": {
 		"activities": [
 			{
@@ -602,7 +602,7 @@
 			}
 		],
 		"folder": {
-			"name": "00_MASTER"
+			"name": "OUTROS"
 		},
 		"annotations": [],
 		"lastPublishTime": "2023-04-24T19:59:33Z"

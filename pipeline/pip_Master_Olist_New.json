@@ -184,6 +184,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "00_MASTER"
+		},
 		"annotations": []
 	}
 }
