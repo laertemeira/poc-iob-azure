@@ -1,5 +1,5 @@
 {
-	"name": "df_03_GOLD_DIM_Customer",
+	"name": "df_03_GOLD_DIM_CUSTOMERS",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
