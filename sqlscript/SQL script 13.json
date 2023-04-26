@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 13",
+	"properties": {
+		"content": {
+			"query": "SELECT  *\nFROM    [03_GOLD_OLIS]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "03_GOLD_OLIST",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
