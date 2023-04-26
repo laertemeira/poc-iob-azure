@@ -1,5 +1,5 @@
 {
-	"name": "pipCustomersOlist",
+	"name": "pip_Customers_Olist",
 	"properties": {
 		"activities": [
 			{
@@ -41,6 +41,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "00_MASTER/Controle_Individual"
+		},
 		"annotations": []
 	}
 }

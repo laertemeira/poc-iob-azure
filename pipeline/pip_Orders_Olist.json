@@ -1,0 +1,71 @@
+{
+	"name": "pip_Orders_Olist",
+	"properties": {
+		"activities": [
+			{
+				"name": "Ingest Orders",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_01_BRONZE_OlistGCP_Orders",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Clean Orders",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Ingest Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileName": "olist_orders_dataset",
+						"TargetDirectory": "SILVER_OLIST",
+						"SourceDirectory": "BRONZE_OLIST"
+					}
+				}
+			},
+			{
+				"name": "Process Orders",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Clean Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_03_GOLD_FACT_ORDERS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileName": "FACT_ORDERS",
+						"SourceDirectory": "SILVER_OLIST",
+						"TargetDirectory": "GOLD_OLIST"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
