@@ -7,7 +7,7 @@
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "GOLD_OLIST",
+				"databaseName": "03_GOLD_OLIST",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000
