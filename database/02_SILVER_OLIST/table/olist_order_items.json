@@ -1,7 +1,7 @@
 {
-	"name": "olist_customers",
+	"name": "olist_order_items",
 	"properties": {
-		"Name": "olist_customers",
+		"Name": "olist_order_items",
 		"EntityType": "TABLE",
 		"Namespace": {
 			"DatabaseName": "02_SILVER_OLIST"
@@ -14,7 +14,7 @@
 		"StorageDescriptor": {
 			"Columns": [
 				{
-					"Name": "customer_id",
+					"Name": "order_id",
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
@@ -27,20 +27,7 @@
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "customer_unique_id",
-					"OriginDataTypeName": {
-						"TypeName": "string",
-						"IsComplexType": false,
-						"IsNullable": true,
-						"Length": 8000,
-						"Properties": {
-							"HIVE_TYPE_STRING": "string"
-						}
-					},
-					"DeltaFormatInvalidMessages": []
-				},
-				{
-					"Name": "customer_zip_code_prefix",
+					"Name": "order_item_id",
 					"OriginDataTypeName": {
 						"TypeName": "integer",
 						"IsComplexType": false,
@@ -52,7 +39,7 @@
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "customer_city",
+					"Name": "product_id",
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
@@ -65,7 +52,7 @@
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "customer_state",
+					"Name": "seller_id",
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
@@ -73,6 +60,43 @@
 						"Length": 8000,
 						"Properties": {
 							"HIVE_TYPE_STRING": "string"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "shipping_limit_date",
+					"OriginDataTypeName": {
+						"TypeName": "date",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Properties": {
+							"DateFormat": "YYYY-MM-DD",
+							"HIVE_TYPE_STRING": "date"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "price",
+					"OriginDataTypeName": {
+						"TypeName": "float",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Properties": {
+							"HIVE_TYPE_STRING": "float"
+						}
+					},
+					"DeltaFormatInvalidMessages": []
+				},
+				{
+					"Name": "freight_value",
+					"OriginDataTypeName": {
+						"TypeName": "float",
+						"IsComplexType": false,
+						"IsNullable": true,
+						"Properties": {
+							"HIVE_TYPE_STRING": "float"
 						}
 					},
 					"DeltaFormatInvalidMessages": []
@@ -97,13 +121,13 @@
 				"FormatType": "parquet",
 				"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
 				"Properties": {
-					"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_customers_dataset",
+					"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_order_items_dataset",
 					"FormatTypeSetToDatabaseDefault": false
 				}
 			},
 			"Source": {
 				"Provider": "ADLS",
-				"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_customers_dataset",
+				"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_order_items_dataset",
 				"Properties": {
 					"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
 					"LocationSetToDatabaseDefault": false
@@ -111,7 +135,7 @@
 			},
 			"Properties": {
 				"textinputformat.record.delimiter": ",",
-				"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+				"compression": "",
 				"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 			},
 			"Compressed": false,
