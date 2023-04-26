@@ -1,0 +1,46 @@
+{
+	"name": "pip_OrderItems_Olist",
+	"properties": {
+		"activities": [
+			{
+				"name": "Ingest Order Items",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_01_BRONZE_OlistGCP_OrderItems",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Clean Order Items",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Ingest Order Items",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileName": "olist_order_items_dataset",
+						"TargetDirectory": "SILVER_OLIST",
+						"SourceDirectory": "BRONZE_OLIST"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
