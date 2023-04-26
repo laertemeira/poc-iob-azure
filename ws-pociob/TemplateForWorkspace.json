@@ -3312,7 +3312,6 @@
 											"type": "Expression"
 										}
 									},
-									"source1": {},
 									"snkFact": {
 										"Directory": {
 											"value": "@pipeline().parameters.TargetDirectory",
@@ -6041,9 +6040,6 @@
 								"type": "DatasetReference"
 							},
 							"name": "srcOrders"
-						},
-						{
-							"name": "source1"
 						}
 					],
 					"sinks": [
@@ -6087,8 +6083,6 @@
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: true,",
 						"     format: 'parquet') ~> srcOrders",
-						"source(allowSchemaDrift: true,",
-						"     validateSchema: false) ~> source1",
 						"srcOrders derive(ID_ORDER = order_id,",
 						"          ID_CUSTOMER = customer_id,",
 						"          TM_PURCHASE = order_purchase_timestamp,",
@@ -6119,9 +6113,7 @@
 						"     truncate: true,",
 						"     umask: 0022,",
 						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> snkFact"
+						"     postCommands: []) ~> snkFact"
 					]
 				}
 			},
