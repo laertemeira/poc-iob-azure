@@ -47,6 +47,10 @@
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_Sellers_Olist",
+						"type": "PipelineReference"
+					},
 					"waitOnCompletion": true
 				}
 			},
