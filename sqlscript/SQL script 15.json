@@ -1,8 +1,8 @@
 {
-	"name": "SQL script 11",
+	"name": "SQL script 15",
 	"properties": {
 		"content": {
-			"query": "SELECT TOP (100) *\n FROM [03_GOLD_OLIST].[dbo].[FACT_ORDERS]",
+			"query": "SELECT  *\nFRP",
 			"metadata": {
 				"language": "sql"
 			},
