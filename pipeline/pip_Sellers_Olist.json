@@ -1,0 +1,46 @@
+{
+	"name": "pip_Sellers_Olist",
+	"properties": {
+		"activities": [
+			{
+				"name": "Ingest Sellers",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_01_BRONZE_OlistGCP_Sellers",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Clean Sellers",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Ingest Sellers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileName": "olist_sellers_dataset",
+						"TargetDirectory": "SILVER_OLIST",
+						"SourceDirectory": "BRONZE_OLIST"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
