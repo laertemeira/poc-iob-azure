@@ -31,7 +31,7 @@
 						"datasetParameters": {
 							"srcOrders": {
 								"Directory": {
-									"value": "@{pipeline().parameters.SourceDirectory}/olist_customers_dataset",
+									"value": "@{pipeline().parameters.SourceDirectory}/olist_orders_dataset",
 									"type": "Expression"
 								}
 							},
