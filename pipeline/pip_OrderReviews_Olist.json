@@ -1,0 +1,46 @@
+{
+	"name": "pip_OrderReviews_Olist",
+	"properties": {
+		"activities": [
+			{
+				"name": "Ingest Reviews",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_01_BRONZE_OlistGCP_OrderReviews",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Clean Reviews",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Ingest Reviews",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileName": "olist_order_reviews_dataset",
+						"TargetDirectory": "SILVER_OLIST",
+						"SourceDirectory": "BRONZE_OLIST"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
