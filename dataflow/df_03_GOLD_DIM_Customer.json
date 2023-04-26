@@ -1,0 +1,66 @@
+{
+	"name": "df_03_GOLD_DIM_Customer",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "srcCustomer"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "snkDIMCUSTOMER"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derDimensionColumns"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          customer_id as string,",
+				"          customer_unique_id as string,",
+				"          customer_zip_code_prefix as integer,",
+				"          customer_city as string,",
+				"          customer_state as string,",
+				"          {_sourcefile} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> srcCustomer",
+				"srcCustomer derive(ID_CUSTOMER = customer_id,",
+				"          ID_CUSTOMER_UNIQUE = customer_unique_id,",
+				"          NU_ZIP_CODE_PREFIX = customer_zip_code_prefix,",
+				"          NM_CUSTOMER_CITY = initCap(customer_city),",
+				"          CD_CUSTOMER_STATE = upper(customer_state)) ~> derDimensionColumns",
+				"derDimensionColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          ID_CUSTOMER,",
+				"          ID_CUSTOMER_UNIQUE,",
+				"          NU_ZIP_CODE_PREFIX,",
+				"          NM_CUSTOMER_CITY,",
+				"          CD_CUSTOMER_STATE,",
+				"          {_sourcefile}",
+				"     )) ~> snkDIMCUSTOMER"
+			]
+		}
+	}
+}
