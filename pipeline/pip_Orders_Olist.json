@@ -39,6 +39,26 @@
 						"SourceDirectory": "BRONZE_OLIST"
 					}
 				}
+			},
+			{
+				"name": "process Orders",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Clean Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_03_GOLD_FACT_ORDERS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"annotations": []
