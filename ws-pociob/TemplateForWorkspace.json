@@ -3506,7 +3506,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/pip_Master_Olist')]",
+			"name": "[concat(parameters('workspaceName'), '/pip_Master_Olist_Old')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -4124,7 +4124,7 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "00_MASTER"
+					"name": "OUTROS"
 				},
 				"annotations": [],
 				"lastPublishTime": "2023-04-24T19:59:33Z"
@@ -4164,7 +4164,7 @@
 						}
 					},
 					{
-						"name": "Exec Products Olistx",
+						"name": "Exec Products Olist",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
 						"userProperties": [],
@@ -4251,7 +4251,7 @@
 								]
 							},
 							{
-								"activity": "Exec Products Olistx",
+								"activity": "Exec Products Olist",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -4347,6 +4347,9 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER"
 				},
 				"annotations": []
 			},
@@ -4540,89 +4543,6 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_OrderReviews')]",
 				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/pip_Orders_Olist')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Ingest Orders",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_01_BRONZE_OlistGCP_Orders",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Clean Orders",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Ingest Orders",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"FileName": "olist_orders_dataset",
-								"TargetDirectory": "SILVER_OLIST",
-								"SourceDirectory": "BRONZE_OLIST"
-							}
-						}
-					},
-					{
-						"name": "Process Orders",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Clean Orders",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_03_GOLD_FACT_ORDERS",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"FileName": "FACT_ORDERS",
-								"SourceDirectory": "SILVER_OLIST",
-								"TargetDirectory": "GOLD_OLIST"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Orders')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_03_GOLD_FACT_ORDERS')]"
 			]
 		},
 		{
@@ -9538,6 +9458,92 @@
 			},
 			"dependsOn": [],
 			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_Orders_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Ingest Orders",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_01_BRONZE_OlistGCP_Orders",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Clean Orders",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Ingest Orders",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "olist_orders_dataset",
+								"TargetDirectory": "SILVER_OLIST",
+								"SourceDirectory": "BRONZE_OLIST"
+							}
+						}
+					},
+					{
+						"name": "process Orders",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Clean Orders",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_03_GOLD_FACT_ORDERS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "FACT_ORDERS",
+								"SourceDirectory": "SILVER_OLIST",
+								"TargetDirectory": "GOLD_OLIST"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER/Controle_Individual"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Orders')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_03_GOLD_FACT_ORDERS')]"
+			]
 		}
 	]
 }
