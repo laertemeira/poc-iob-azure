@@ -26,44 +26,7 @@
 			},
 			"compressionCodec": "snappy"
 		},
-		"schema": [
-			{
-				"name": "order_id",
-				"type": "UTF8"
-			},
-			{
-				"name": "customer_id",
-				"type": "UTF8"
-			},
-			{
-				"name": "order_status",
-				"type": "UTF8"
-			},
-			{
-				"name": "order_purchase_timestamp",
-				"type": "UTF8"
-			},
-			{
-				"name": "order_approved_at",
-				"type": "UTF8"
-			},
-			{
-				"name": "order_delivered_carrier_date",
-				"type": "UTF8"
-			},
-			{
-				"name": "order_delivered_customer_date",
-				"type": "UTF8"
-			},
-			{
-				"name": "order_estimated_delivery_date",
-				"type": "UTF8"
-			},
-			{
-				"name": "_sourcefile",
-				"type": "UTF8"
-			}
-		]
+		"schema": []
 	},
 	"type": "Microsoft.Synapse/workspaces/datasets"
 }
