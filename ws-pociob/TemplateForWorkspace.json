@@ -62,41 +62,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/pipEventualOlistCustomer')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Ingest Customer",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_01_BRONZE_OlistGCP_Customers",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "00_MASTER/Controle_Individual/BRONZE"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-04-24T20:13:03Z"
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Customers')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/pip_01_BRONZE_OlistGCP_CategoryName')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -3308,7 +3273,7 @@
 								"datasetParameters": {
 									"srcOrders": {
 										"Directory": {
-											"value": "@{pipeline().parameters.SourceDirectory}/olist_customers_dataset",
+											"value": "@{pipeline().parameters.SourceDirectory}/olist_orders_dataset",
 											"type": "Expression"
 										}
 									},
@@ -3358,6 +3323,186 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_FACT_ORDERS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_CategoryNameTranslation_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Ingest Category Name Translations",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_01_BRONZE_OlistGCP_CategoryName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Clean Category Name Translations",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Ingest Category Name Translations",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "product_category_name_translation",
+								"TargetDirectory": "SILVER_OLIST",
+								"SourceDirectory": "BRONZE_OLIST"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER/Controle_Individual"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_CategoryName')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_Customers_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Ingest Customer",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_01_BRONZE_OlistGCP_Customers",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Clean Customers",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Ingest Customer",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "olist_customers_dataset",
+								"TargetDirectory": "SILVER_OLIST",
+								"SourceDirectory": "BRONZE_OLIST"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER/Controle_Individual"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Customers')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_GeoLocation_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Ingest Geo Location",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_01_BRONZE_OlistGCP_GeoLocation",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Clean Geo Location",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Ingest Geo Location",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "olist_geolocation_dataset",
+								"TargetDirectory": "SILVER_OLIST",
+								"SourceDirectory": "BRONZE_OLIST"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER/Controle_Individual"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_GeoLocation')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]"
 			]
 		},
 		{
@@ -3996,6 +4141,608 @@
 				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Sellers')]",
 				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]",
 				"[concat(variables('workspaceId'), '/pipelines/pip_03_GOLD_FACT_ORDERS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_Master_Olist_New')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Exec Customers Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_Customers_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec Products Olistx",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_Products_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec GeoLocation Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_GeoLocation_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec Sellers Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_Sellers_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec CategoryName Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_CategoryNameTranslation_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec Orders Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "waiDimFacts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_Orders_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "waiDimFacts",
+						"type": "Wait",
+						"dependsOn": [
+							{
+								"activity": "Exec Customers Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Exec Products Olistx",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Exec GeoLocation Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Exec Sellers Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Exec CategoryName Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					},
+					{
+						"name": "Exec OrderItems Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "waiDimFacts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_OrderItems_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec OrderPayments Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "waiDimFacts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_OrderPayments_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec OrderReviews Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "waiDimFacts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_OrderReviews_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_Customers_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_Products_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_GeoLocation_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_Sellers_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_CategoryNameTranslation_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_Orders_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_OrderItems_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_OrderPayments_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_OrderReviews_Olist')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_OrderItems_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Ingest Order Items",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_01_BRONZE_OlistGCP_OrderItems",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Clean Order Items",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Ingest Order Items",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "olist_order_items_dataset",
+								"TargetDirectory": "SILVER_OLIST",
+								"SourceDirectory": "BRONZE_OLIST"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER/Controle_Individual"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_OrderItems')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_OrderPayments_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Ingest Payments",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_01_BRONZE_OlistGCP_Payments",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Clean Payments",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Ingest Payments",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "olist_order_payments_dataset",
+								"TargetDirectory": "SILVER_OLIST",
+								"SourceDirectory": "BRONZE_OLIST"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER/Controle_Individual"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Payments')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_OrderReviews_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Ingest Reviews",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_01_BRONZE_OlistGCP_OrderReviews",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Clean Reviews",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Ingest Reviews",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "olist_order_reviews_dataset",
+								"TargetDirectory": "SILVER_OLIST",
+								"SourceDirectory": "BRONZE_OLIST"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER/Controle_Individual"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_OrderReviews')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_Orders_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Ingest Orders",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_01_BRONZE_OlistGCP_Orders",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Clean Orders",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Ingest Orders",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "olist_orders_dataset",
+								"TargetDirectory": "SILVER_OLIST",
+								"SourceDirectory": "BRONZE_OLIST"
+							}
+						}
+					},
+					{
+						"name": "Process Orders",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Clean Orders",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_03_GOLD_FACT_ORDERS",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "FACT_ORDERS",
+								"SourceDirectory": "SILVER_OLIST",
+								"TargetDirectory": "GOLD_OLIST"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Orders')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_03_GOLD_FACT_ORDERS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_Products_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Ingest Products",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_01_BRONZE_OlistGCP_Products",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Clean Products",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Ingest Products",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "olist_products_dataset",
+								"TargetDirectory": "SILVER_OLIST",
+								"SourceDirectory": "BRONZE_OLIST"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER/Controle_Individual"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Products')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_Sellers_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Ingest Sellers",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_01_BRONZE_OlistGCP_Sellers",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Clean Sellers",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Ingest Sellers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"FileName": "olist_sellers_dataset",
+								"TargetDirectory": "SILVER_OLIST",
+								"SourceDirectory": "BRONZE_OLIST"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER/Controle_Individual"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_Sellers')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]"
 			]
 		},
 		{
@@ -5588,7 +6335,11 @@
 								"referenceName": "ds_02_SILVER_Write_OlistGCP_Parquet",
 								"type": "DatasetReference"
 							},
-							"name": "snkOlistParquet2"
+							"name": "snkOlistParquet2",
+							"rejectedDataLinkedService": {
+								"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+								"type": "LinkedServiceReference"
+							}
 						}
 					],
 					"transformations": [
@@ -5626,7 +6377,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/ds_02_SILVER_Read_OlistGCP_Parquet')]",
-				"[concat(variables('workspaceId'), '/datasets/ds_02_SILVER_Write_OlistGCP_Parquet')]"
+				"[concat(variables('workspaceId'), '/datasets/ds_02_SILVER_Write_OlistGCP_Parquet')]",
+				"[concat(variables('workspaceId'), '/linkedServices/ws-pociob-WorkspaceDefaultStorage')]"
 			]
 		},
 		{
@@ -6370,6 +7122,719 @@
 					"resultLimit": 5000
 				},
 				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Notebook 1')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spkPool",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "f2d4c817-3d7f-4de8-97e5-db0872c1c11c"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "sql"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/7e9f5794-cc11-45c0-8ced-29f654880041/resourceGroups/rgPOCIOB/providers/Microsoft.Synapse/workspaces/ws-pociob/bigDataPools/spkPool",
+						"name": "spkPool",
+						"type": "Spark",
+						"endpoint": "https://ws-pociob.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spkPool",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.3",
+						"nodeCount": 10,
+						"cores": 4,
+						"memory": 28
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {
+								"language": "python"
+							}
+						},
+						"source": [
+							"%%pyspark\n",
+							"spark.sql(\"DROP DATABASE IF EXISTS default CASCADE\")"
+						],
+						"outputs": [],
+						"execution_count": 1
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Notebook 2')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "spkPool",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "b2b6bb4f-231b-4da7-bf19-91ec81bc0a7f"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/7e9f5794-cc11-45c0-8ced-29f654880041/resourceGroups/rgPOCIOB/providers/Microsoft.Synapse/workspaces/ws-pociob/bigDataPools/spkPool",
+						"name": "spkPool",
+						"type": "Spark",
+						"endpoint": "https://ws-pociob.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spkPool",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.3",
+						"nodeCount": 10,
+						"cores": 4,
+						"memory": 28
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {
+								"language": "python"
+							}
+						},
+						"source": [
+							"%%pyspark\n",
+							"spark.sql(\"DROP DATABASE IF EXISTS default CASCADE\")"
+						],
+						"outputs": [],
+						"execution_count": 1
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Notebook 3')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "524e2a50-7ba7-4864-a9d5-80134cf558a3"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "python"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {
+								"language": "python"
+							}
+						},
+						"source": [
+							"%%pyspark\n",
+							"spark.sql(\"CREATE TABLE IF NOT EXISTS default.banan USING Parquet LOCATION 'YourFilePath'\")"
+						],
+						"outputs": [],
+						"execution_count": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/01_BRONZE_OLIST')]",
+			"type": "Microsoft.Synapse/workspaces/databases",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"Ddls": [
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "01_BRONZE_OLIST",
+							"EntityType": "DATABASE",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"Properties": {
+								"IsSyMSCDMDatabase": true
+							},
+							"Source": {
+								"Provider": "ADLS",
+								"Location": "abfss://pociobrawlanding@pocioblake.dfs.core.windows.net/BRONZE_OLIST",
+								"Properties": {
+									"FormatType": "parquet",
+									"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage"
+								}
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/02_SILVER_OLIST')]",
+			"type": "Microsoft.Synapse/workspaces/databases",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"Ddls": [
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "02_SILVER_OLIST",
+							"EntityType": "DATABASE",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"Properties": {
+								"IsSyMSCDMDatabase": true
+							},
+							"Source": {
+								"Provider": "ADLS",
+								"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST",
+								"Properties": {
+									"FormatType": "parquet",
+									"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage"
+								}
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "olist_customers",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "02_SILVER_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "customer_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "customer_unique_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "customer_zip_code_prefix",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "customer_city",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "customer_state",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "_sourcefile",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_customers_dataset",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_customers_dataset",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "olist_geolocation",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "02_SILVER_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "geolocation_zip_code_prefix",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "geolocation_lat",
+										"OriginDataTypeName": {
+											"TypeName": "float",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "float"
+											}
+										}
+									},
+									{
+										"Name": "geolocation_lng",
+										"OriginDataTypeName": {
+											"TypeName": "float",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "float"
+											}
+										}
+									},
+									{
+										"Name": "geolocation_city",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "geolocation_state",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "_sourcefile",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_geolocation_dataset",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_geolocation_dataset",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "olist_orders",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "02_SILVER_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "order_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "customer_id",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "order_status",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "order_purchase_timestamp",
+										"OriginDataTypeName": {
+											"TypeName": "timestamp",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+												"HIVE_TYPE_STRING": "timestamp"
+											}
+										}
+									},
+									{
+										"Name": "order_approved_at",
+										"OriginDataTypeName": {
+											"TypeName": "timestamp",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+												"HIVE_TYPE_STRING": "timestamp"
+											}
+										}
+									},
+									{
+										"Name": "order_delivered_carrier_date",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										}
+									},
+									{
+										"Name": "order_delivered_customer_date",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										}
+									},
+									{
+										"Name": "order_estimated_delivery_date",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										}
+									},
+									{
+										"Name": "_sourcefile",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_orders_dataset",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_orders_dataset",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/03_GOLD_OLIST')]",
+			"type": "Microsoft.Synapse/workspaces/databases",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"Ddls": [
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "03_GOLD_OLIST",
+							"EntityType": "DATABASE",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"Properties": {
+								"IsSyMSCDMDatabase": true
+							},
+							"Source": {
+								"Provider": "ADLS",
+								"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST",
+								"Properties": {
+									"FormatType": "parquet",
+									"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage"
+								}
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					}
+				]
 			},
 			"dependsOn": []
 		},
@@ -8048,6 +9513,31 @@
 				]
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/spkPool')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 15
+				},
+				"autoScale": {
+					"enabled": false,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 10,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.3",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
 		}
 	]
 }
