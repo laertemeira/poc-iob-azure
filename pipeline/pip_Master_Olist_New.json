@@ -16,7 +16,7 @@
 				}
 			},
 			{
-				"name": "Exec Products Olist",
+				"name": "Exec Products Olistx",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"userProperties": [],
@@ -98,7 +98,7 @@
 						]
 					},
 					{
-						"activity": "Exec Products Olist",
+						"activity": "Exec Products Olistx",
 						"dependencyConditions": [
 							"Succeeded"
 						]
