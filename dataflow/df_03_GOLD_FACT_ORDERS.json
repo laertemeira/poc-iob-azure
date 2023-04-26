@@ -30,7 +30,7 @@
 			],
 			"transformations": [
 				{
-					"name": "colTransform"
+					"name": "derNewColumns"
 				},
 				{
 					"name": "selFactLayout"
@@ -41,18 +41,7 @@
 				"     Directory as string,",
 				"     FilePrefix as string",
 				"}",
-				"source(output(",
-				"          order_id as string,",
-				"          customer_id as string,",
-				"          order_status as string,",
-				"          order_purchase_timestamp as timestamp,",
-				"          order_approved_at as timestamp,",
-				"          order_delivered_carrier_date as date,",
-				"          order_delivered_customer_date as date,",
-				"          order_estimated_delivery_date as date,",
-				"          {_sourcefile} as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
+				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: true,",
 				"     format: 'parquet') ~> srcOrders",
@@ -64,8 +53,8 @@
 				"          DT_DELIVERED_CUSTOMER = order_delivered_customer_date,",
 				"          DT_DELIVERY_ESTIMATED = order_estimated_delivery_date,",
 				"          DS_STATUS = initCap(order_status),",
-				"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> colTransform",
-				"colTransform select(mapColumn(",
+				"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derNewColumns",
+				"derNewColumns select(mapColumn(",
 				"          ID_ORDER,",
 				"          ID_CUSTOMER,",
 				"          TM_PURCHASE,",
