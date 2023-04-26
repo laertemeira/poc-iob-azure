@@ -22,7 +22,11 @@
 						"referenceName": "ds_02_SILVER_Write_OlistGCP_Parquet",
 						"type": "DatasetReference"
 					},
-					"name": "snkOlistParquet2"
+					"name": "snkOlistParquet2",
+					"rejectedDataLinkedService": {
+						"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [
