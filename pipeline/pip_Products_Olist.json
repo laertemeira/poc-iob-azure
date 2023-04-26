@@ -1,0 +1,46 @@
+{
+	"name": "pip_Products_Olist",
+	"properties": {
+		"activities": [
+			{
+				"name": "Ingest Products",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_01_BRONZE_OlistGCP_Products",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Clean Products",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Ingest Products",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_02_SILVER_Clean_OlistGCP",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileName": "olist_products_dataset",
+						"TargetDirectory": "SILVER_OLIST",
+						"SourceDirectory": "BRONZE_OLIST"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
