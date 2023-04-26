@@ -57,7 +57,12 @@
 						"referenceName": "pip_03_GOLD_FACT_ORDERS",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileName": "FACT_ORDERS",
+						"SourceDirectory": "SILVER_OLIST/olist_orders_dataset/",
+						"TargetDirectory": "GOLD_OLIST/FACT_ORDERS/"
+					}
 				}
 			}
 		],
