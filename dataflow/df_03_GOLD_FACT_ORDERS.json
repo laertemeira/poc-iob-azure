@@ -86,9 +86,7 @@
 				"     truncate: true,",
 				"     umask: 0022,",
 				"     preCommands: [],",
-				"     postCommands: [],",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> snkFact"
+				"     postCommands: []) ~> snkFact"
 			]
 		}
 	}
