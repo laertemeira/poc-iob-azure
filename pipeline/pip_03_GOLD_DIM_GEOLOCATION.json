@@ -3,55 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Dim Products",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
-						"referenceName": "df_03_GOLD_DIM_PRODUCTS",
-						"type": "DataFlowReference",
-						"parameters": {
-							"Directory": {
-								"value": "'@{pipeline().parameters.TargetDirectory}'",
-								"type": "Expression"
-							},
-							"FilePrefix": {
-								"value": "'@{pipeline().parameters.FileName}'",
-								"type": "Expression"
-							}
-						},
-						"datasetParameters": {
-							"srcProducts": {
-								"Directory": "@{pipeline().parameters.SourceDirectory}/olist_customers_dataset"
-							},
-							"snkDIMPRODUCTS": {
-								"Directory": {
-									"value": "@pipeline().parameters.TargetDirectory",
-									"type": "Expression"
-								},
-								"Table": {
-									"value": "@pipeline().parameters.FileName",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine"
-				}
-			},
-			{
 				"name": "Dim Geolocation",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
@@ -104,7 +55,7 @@
 		"parameters": {
 			"FileName": {
 				"type": "string",
-				"defaultValue": "DIM_PRODUCTS"
+				"defaultValue": "DIM_GEOLOCATION"
 			},
 			"SourceDirectory": {
 				"type": "string",
