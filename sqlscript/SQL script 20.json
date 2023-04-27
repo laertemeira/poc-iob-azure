@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 20",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [ID_PRODUCT]\n,[NM_CATEGORY]\n,[NU_NAME_LENGHT]\n,[NU_DESCRIPTION_LENGHT]\n,[QT_PHOTOS]\n,[NU_WEIGHT_G]\n,[NU_HEIGHT_CM]\n,[NU_WIDTH_CM]\n,[_sourcefile]\n FROM [03_GOLD_OLIST].[dbo].[DIM_PRODUCTS]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "03_GOLD_OLIST",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
