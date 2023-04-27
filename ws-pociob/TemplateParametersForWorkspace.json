@@ -34,12 +34,6 @@
 		},
 		"ws-pociob-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://pocioblake.dfs.core.windows.net"
-		},
-		"Trigger_j4z_properties_pip_01_BRONZE_SalesForce_parameters_windowStart": {
-			"value": "@{addminutes(trigger().scheduledTime, -15)}"
-		},
-		"Trigger_j4z_properties_pip_01_BRONZE_SalesForce_parameters_windowEnd": {
-			"value": "@trigger().scheduledTime"
 		}
 	}
 }
