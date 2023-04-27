@@ -39,6 +39,31 @@
 						"SourceDirectory": "BRONZE_OLIST"
 					}
 				}
+			},
+			{
+				"name": "Process Dim Category Translation",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Clean Category Name Translations",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_03_GOLD_DIM_CATEGORY_TRANSLATION",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileName": "DIM_CATEGORY_TRANSLATION",
+						"SourceDirectory": "SILVER_OLIST",
+						"TargetDirectory": "GOLD_OLIST"
+					}
+				}
 			}
 		],
 		"folder": {
