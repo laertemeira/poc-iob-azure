@@ -1,0 +1,68 @@
+{
+	"name": "df_03_GOLD_DIM_CATEGORY_TRANSLATION",
+	"properties": {
+		"folder": {
+			"name": "03_GOLD_OLIST"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "srcSellers"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "snkDIMGEOLOCATION"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derDimensionColumns"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     Directory as string,",
+				"     FilePrefix as string",
+				"}",
+				"source(output(",
+				"          product_category_name as string,",
+				"          product_category_name_english as string,",
+				"          {_sourcefile} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> srcSellers",
+				"srcSellers derive(NM_PRODUCT_CATEGORY = initCap(product_category_name),",
+				"          NM_PRODUCT_CATEGORY_ENG = initCap(product_category_name_english),",
+				"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet',",
+				"          {_sourcefile} = {_sourcefile}) ~> derDimensionColumns",
+				"derDimensionColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     rowUrlColumn:'_watermark',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          NM_PRODUCT_CATEGORY,",
+				"          NM_PRODUCT_CATEGORY_ENG,",
+				"          {_sourcefile},",
+				"          {_watermark}",
+				"     )) ~> snkDIMGEOLOCATION"
+			]
+		}
+	}
+}
