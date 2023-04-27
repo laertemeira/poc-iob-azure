@@ -39,6 +39,31 @@
 						"SourceDirectory": "BRONZE_OLIST"
 					}
 				}
+			},
+			{
+				"name": "Process Dim Customers",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Clean Customers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_03_GOLD_DIM_CUSTOMERS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileName": "DIM_CUSTOMERS",
+						"SourceDirectory": "SILVER_OLIST",
+						"TargetDirectory": "GOLD_OLIST"
+					}
+				}
 			}
 		],
 		"folder": {
