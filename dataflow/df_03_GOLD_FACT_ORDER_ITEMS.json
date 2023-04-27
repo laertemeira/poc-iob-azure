@@ -1,0 +1,86 @@
+{
+	"name": "df_03_GOLD_FACT_ORDER_ITEMS",
+	"properties": {
+		"folder": {
+			"name": "03_GOLD_OLIST"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "srcOrders"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "snkFact",
+					"rejectedDataLinkedService": {
+						"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "derNewColumns"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     Directory as string,",
+				"     FilePrefix as string",
+				"}",
+				"source(output(",
+				"          order_id as string,",
+				"          order_item_id as integer,",
+				"          product_id as string,",
+				"          seller_id as string,",
+				"          shipping_limit_date as date,",
+				"          price as float,",
+				"          freight_value as float,",
+				"          {_sourcefile} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: true,",
+				"     format: 'parquet') ~> srcOrders",
+				"srcOrders derive(ID_ORDER = order_id,",
+				"          ID_ORDER_ITEM = order_item_id,",
+				"          ID_PRODUCT = product_id,",
+				"          ID_SELLER = seller_id,",
+				"          DT_SHIPPING_LIMIT = shipping_limit_date,",
+				"          VL_PRICE = price,",
+				"          VL_FREIGHT = freight_value,",
+				"          {_sourcefile} = {_sourcefile},",
+				"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derNewColumns",
+				"derNewColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     rowUrlColumn:'_watermark',",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     mapColumn(",
+				"          ID_ORDER,",
+				"          ID_ORDER_ITEM,",
+				"          ID_PRODUCT,",
+				"          ID_SELLER,",
+				"          DT_SHIPPING_LIMIT,",
+				"          VL_PRICE,",
+				"          VL_FREIGHT,",
+				"          {_sourcefile},",
+				"          {_watermark}",
+				"     )) ~> snkFact"
+			]
+		}
+	}
+}
