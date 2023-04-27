@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 18",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) *\n FROM [02_SILVER_OLIST].[dbo].[oli]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "02_SILVER_OLIST",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,85 @@
+{
+	"name": "df_03_GOLD_DIM_GEOLOCATION",
+	"properties": {
+		"folder": {
+			"name": "03_GOLD_OLIST"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "srcProducts"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "snkDIMCUSTOMER"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derDimensionColumns"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     Directory as string,",
+				"     FilePrefix as string",
+				"}",
+				"source(output(",
+				"          product_id as string,",
+				"          product_category_name as string,",
+				"          product_name_lenght as integer,",
+				"          product_description_lenght as integer,",
+				"          product_photos_qty as integer,",
+				"          product_weight_g as integer,",
+				"          product_length_cm as integer,",
+				"          product_height_cm as integer,",
+				"          product_width_cm as integer,",
+				"          {_sourcefile} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> srcProducts",
+				"srcProducts derive(ID_PRODUCT = product_id,",
+				"          NM_CATEGORY = initCap(product_category_name),",
+				"          NU_NAME_LENGHT = product_name_lenght,",
+				"          NU_DESCRIPTION_LENGHT = product_description_lenght,",
+				"          QT_PHOTOS = product_photos_qty,",
+				"          NU_WEIGHT_G = product_weight_g,",
+				"          NU_HEIGHT_CM = product_height_cm,",
+				"          NU_WIDTH_CM = product_width_cm,",
+				"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derDimensionColumns",
+				"derDimensionColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     rowUrlColumn:'_watermark',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          ID_PRODUCT,",
+				"          NM_CATEGORY,",
+				"          NU_NAME_LENGHT,",
+				"          NU_DESCRIPTION_LENGHT,",
+				"          QT_PHOTOS,",
+				"          NU_WEIGHT_G,",
+				"          NU_HEIGHT_CM,",
+				"          NU_WIDTH_CM,",
+				"          {_sourcefile}",
+				"     )) ~> snkDIMCUSTOMER"
+			]
+		}
+	}
+}
