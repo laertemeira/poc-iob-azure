@@ -12,7 +12,7 @@
 						"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
 						"type": "DatasetReference"
 					},
-					"name": "srcProducts"
+					"name": "srcGeoLocation"
 				}
 			],
 			"sinks": [
@@ -21,7 +21,7 @@
 						"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
 						"type": "DatasetReference"
 					},
-					"name": "snkDIMCUSTOMER"
+					"name": "snkDIMGEOLOCATION"
 				}
 			],
 			"transformations": [
@@ -35,30 +35,24 @@
 				"     FilePrefix as string",
 				"}",
 				"source(output(",
-				"          product_id as string,",
-				"          product_category_name as string,",
-				"          product_name_lenght as integer,",
-				"          product_description_lenght as integer,",
-				"          product_photos_qty as integer,",
-				"          product_weight_g as integer,",
-				"          product_length_cm as integer,",
-				"          product_height_cm as integer,",
-				"          product_width_cm as integer,",
+				"          geolocation_zip_code_prefix as integer,",
+				"          geolocation_lat as float,",
+				"          geolocation_lng as float,",
+				"          geolocation_city as string,",
+				"          geolocation_state as string,",
 				"          {_sourcefile} as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> srcProducts",
-				"srcProducts derive(ID_PRODUCT = product_id,",
-				"          NM_CATEGORY = initCap(product_category_name),",
-				"          NU_NAME_LENGHT = product_name_lenght,",
-				"          NU_DESCRIPTION_LENGHT = product_description_lenght,",
-				"          QT_PHOTOS = product_photos_qty,",
-				"          NU_WEIGHT_G = product_weight_g,",
-				"          NU_HEIGHT_CM = product_height_cm,",
-				"          NU_WIDTH_CM = product_width_cm,",
-				"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derDimensionColumns",
+				"     format: 'parquet') ~> srcGeoLocation",
+				"srcGeoLocation derive(NU_ZIPCODE_PREFIX = geolocation_zip_code_prefix,",
+				"          FL_LATITUDE = geolocation_lat,",
+				"          FL_LONGITUDE = geolocation_lng,",
+				"          NM_CITY = initCap(geolocation_city),",
+				"          CD_STATE = upper(geolocation_state),",
+				"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet',",
+				"          {_sourcefile} = {_sourcefile}) ~> derDimensionColumns",
 				"derDimensionColumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
@@ -78,7 +72,7 @@
 				"          NU_HEIGHT_CM,",
 				"          NU_WIDTH_CM,",
 				"          {_sourcefile}",
-				"     )) ~> snkDIMCUSTOMER"
+				"     )) ~> snkDIMGEOLOCATION"
 			]
 		}
 	}
