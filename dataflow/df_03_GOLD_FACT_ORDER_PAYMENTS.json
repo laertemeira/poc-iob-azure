@@ -1,0 +1,80 @@
+{
+	"name": "df_03_GOLD_FACT_ORDER_PAYMENTS",
+	"properties": {
+		"folder": {
+			"name": "03_GOLD_OLIST"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "srcOrders"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "snkFact",
+					"rejectedDataLinkedService": {
+						"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "derNewColumns"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     Directory as string,",
+				"     FilePrefix as string",
+				"}",
+				"source(output(",
+				"          order_id as string,",
+				"          payment_sequential as integer,",
+				"          payment_type as string,",
+				"          payment_installments as integer,",
+				"          payment_value as float,",
+				"          {_sourcefile} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: true,",
+				"     format: 'parquet') ~> srcOrders",
+				"srcOrders derive(ID_ORDER = order_id,",
+				"          SQ_PAYMENT = payment_sequential,",
+				"          DS_TYPE = initCap(payment_type),",
+				"          NU_INSTALLMENTS = payment_installments,",
+				"          VL_PAYMENT = payment_value,",
+				"          {_sourcefile} = {_sourcefile},",
+				"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derNewColumns",
+				"derNewColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     rowUrlColumn:'_watermark',",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     mapColumn(",
+				"          ID_ORDER,",
+				"          SQ_PAYMENT,",
+				"          DS_TYPE,",
+				"          NU_INSTALLMENTS,",
+				"          VL_PAYMENT,",
+				"          {_sourcefile},",
+				"          {_watermark}",
+				"     )) ~> snkFact"
+			]
+		}
+	}
+}
