@@ -39,6 +39,31 @@
 						"SourceDirectory": "BRONZE_OLIST"
 					}
 				}
+			},
+			{
+				"name": "Process Fact Order Items",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Clean Order Items",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pip_03_GOLD_FACT_ORDER_ITEMS",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"FileName": "FACT_ORDER_ITEMS",
+						"SourceDirectory": "SILVER_OLIST",
+						"TargetDirectory": "GOLD_OLIST"
+					}
+				}
 			}
 		],
 		"folder": {
