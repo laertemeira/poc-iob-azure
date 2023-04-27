@@ -32,7 +32,7 @@
 							"srcSellers": {
 								"Directory": "@{pipeline().parameters.SourceDirectory}/olist_sellers_dataset"
 							},
-							"snkDIMGEOLOCATION": {
+							"snkDIMSELLERS": {
 								"Directory": {
 									"value": "@pipeline().parameters.TargetDirectory",
 									"type": "Expression"
