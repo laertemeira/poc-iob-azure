@@ -63,6 +63,7 @@
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     rowUrlColumn:'_watermark',",
+				"     truncate: true,",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
