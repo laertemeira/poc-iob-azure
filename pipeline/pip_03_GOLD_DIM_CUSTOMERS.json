@@ -69,6 +69,9 @@
 				"defaultValue": "GOLD_OLIST"
 			}
 		},
+		"folder": {
+			"name": "03_GOLD_OLIST"
+		},
 		"annotations": []
 	}
 }
