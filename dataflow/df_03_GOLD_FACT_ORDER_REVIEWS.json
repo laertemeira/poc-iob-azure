@@ -1,0 +1,86 @@
+{
+	"name": "df_03_GOLD_FACT_ORDER_REVIEWS",
+	"properties": {
+		"folder": {
+			"name": "03_GOLD_OLIST"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "srcOrderReviews"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+						"type": "DatasetReference"
+					},
+					"name": "snkFact",
+					"rejectedDataLinkedService": {
+						"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "derNewColumns"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     Directory as string,",
+				"     FilePrefix as string",
+				"}",
+				"source(output(",
+				"          review_id as string,",
+				"          order_id as string,",
+				"          review_score as integer,",
+				"          review_comment_title as string,",
+				"          review_comment_message as string,",
+				"          review_creation_date as date,",
+				"          review_answer_timestamp as timestamp,",
+				"          {_sourcefile} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: true,",
+				"     format: 'parquet') ~> srcOrderReviews",
+				"srcOrderReviews derive(ID_ORDER = order_id,",
+				"          ID_REVIEW = review_id,",
+				"          NU_SCORE = review_score,",
+				"          DS_TITLE = initCap(review_comment_title),",
+				"          DS_MESSAGE = review_comment_message,",
+				"          DT_CREATION = review_creation_date,",
+				"          TM_ANSWER = review_answer_timestamp,",
+				"          {_sourcefile} = {_sourcefile},",
+				"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derNewColumns",
+				"derNewColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     rowUrlColumn:'_watermark',",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     mapColumn(",
+				"          ID_ORDER,",
+				"          ID_REVIEW,",
+				"          NU_SCORE,",
+				"          DS_TITLE,",
+				"          DS_MESSAGE,",
+				"          DT_CREATION,",
+				"          TM_ANSWER,",
+				"          {_sourcefile},",
+				"          {_watermark}",
+				"     )) ~> snkFact"
+			]
+		}
+	}
+}
