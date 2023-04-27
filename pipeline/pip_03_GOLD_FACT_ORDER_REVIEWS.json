@@ -3,55 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Process Order Payments",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
-						"referenceName": "df_03_GOLD_FACT_ORDER_PAYMENTS",
-						"type": "DataFlowReference",
-						"parameters": {
-							"Directory": {
-								"value": "'@{pipeline().parameters.TargetDirectory}'",
-								"type": "Expression"
-							},
-							"FilePrefix": {
-								"value": "'@{pipeline().parameters.FileName}'",
-								"type": "Expression"
-							}
-						},
-						"datasetParameters": {
-							"srcOrders": {
-								"Directory": "@{pipeline().parameters.SourceDirectory}/olist_order_payments_dataset"
-							},
-							"snkFact": {
-								"Directory": {
-									"value": "@pipeline().parameters.TargetDirectory",
-									"type": "Expression"
-								},
-								"Table": {
-									"value": "@pipeline().parameters.FileName",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine"
-				}
-			},
-			{
 				"name": "Process Order Reviews",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
@@ -104,7 +55,7 @@
 		"parameters": {
 			"FileName": {
 				"type": "string",
-				"defaultValue": "FACT_ORDER_PAYMENTS"
+				"defaultValue": "FACT_ORDER_REVIEWS"
 			},
 			"SourceDirectory": {
 				"type": "string",
