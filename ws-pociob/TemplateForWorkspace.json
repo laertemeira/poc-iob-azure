@@ -62,6 +62,228 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/pip_00_Master_Olist')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Exec Customers Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_Customers_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec Products Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_Products_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec GeoLocation Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_GeoLocation_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec Sellers Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_Sellers_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec CategoryName Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_CategoryNameTranslation_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec Orders Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "wait Dims Facts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_Orders_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "wait Dims Facts",
+						"type": "Wait",
+						"dependsOn": [
+							{
+								"activity": "Exec Customers Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Exec Products Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Exec GeoLocation Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Exec Sellers Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Exec CategoryName Olist",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					},
+					{
+						"name": "Exec OrderItems Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "wait Dims Facts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_OrderItems_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec OrderPayments Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "wait Dims Facts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_OrderPayments_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Exec OrderReviews Olist",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "wait Dims Facts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pip_OrderReviews_Olist",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "00_MASTER"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/pipelines/pip_Customers_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_Products_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_GeoLocation_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_Sellers_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_CategoryNameTranslation_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_Orders_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_OrderItems_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_OrderPayments_Olist')]",
+				"[concat(variables('workspaceId'), '/pipelines/pip_OrderReviews_Olist')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/pip_01_BRONZE_OlistGCP_CategoryName')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -3239,6 +3461,429 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_DIM_CATEGORY_TRANSLATION')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Dim Category Translation",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_03_GOLD_DIM_CATEGORY_TRANSLATION",
+								"type": "DataFlowReference",
+								"parameters": {
+									"Directory": {
+										"value": "'@{pipeline().parameters.TargetDirectory}'",
+										"type": "Expression"
+									},
+									"FilePrefix": {
+										"value": "'@{pipeline().parameters.FileName}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"srcCategory": {
+										"Directory": "@{pipeline().parameters.SourceDirectory}/product_category_name_translation"
+									},
+									"snkDIMCATEGORYTRANSLATION": {
+										"Directory": {
+											"value": "@pipeline().parameters.TargetDirectory",
+											"type": "Expression"
+										},
+										"Table": {
+											"value": "@pipeline().parameters.FileName",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "DIM_CATEGORY_TRANSLATION"
+					},
+					"SourceDirectory": {
+						"type": "string",
+						"defaultValue": "SILVER_OLIST"
+					},
+					"TargetDirectory": {
+						"type": "string",
+						"defaultValue": "GOLD_OLIST"
+					}
+				},
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_DIM_CATEGORY_TRANSLATION')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_DIM_CUSTOMERS')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Dim Customers",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_03_GOLD_DIM_CUSTOMERS",
+								"type": "DataFlowReference",
+								"parameters": {
+									"Directory": {
+										"value": "'@{pipeline().parameters.TargetDirectory}'",
+										"type": "Expression"
+									},
+									"FilePrefix": {
+										"value": "'@{pipeline().parameters.FileName}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"srcCustomer": {
+										"Directory": {
+											"value": "@{pipeline().parameters.SourceDirectory}/olist_customers_dataset",
+											"type": "Expression"
+										}
+									},
+									"snkDIMCUSTOMER": {
+										"Directory": {
+											"value": "@pipeline().parameters.TargetDirectory",
+											"type": "Expression"
+										},
+										"Table": {
+											"value": "@pipeline().parameters.FileName",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "DIM_CUSTOMERS"
+					},
+					"SourceDirectory": {
+						"type": "string",
+						"defaultValue": "SILVER_OLIST"
+					},
+					"TargetDirectory": {
+						"type": "string",
+						"defaultValue": "GOLD_OLIST"
+					}
+				},
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_DIM_CUSTOMERS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_DIM_GEOLOCATION')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Dim Geolocation",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_03_GOLD_DIM_GEOLOCATION",
+								"type": "DataFlowReference",
+								"parameters": {
+									"Directory": {
+										"value": "'@{pipeline().parameters.TargetDirectory}'",
+										"type": "Expression"
+									},
+									"FilePrefix": {
+										"value": "'@{pipeline().parameters.FileName}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"srcGeoLocation": {
+										"Directory": "@{pipeline().parameters.SourceDirectory}/olist_geolocation_dataset"
+									},
+									"snkDIMGEOLOCATION": {
+										"Directory": {
+											"value": "@pipeline().parameters.TargetDirectory",
+											"type": "Expression"
+										},
+										"Table": {
+											"value": "@pipeline().parameters.FileName",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "DIM_GEOLOCATION"
+					},
+					"SourceDirectory": {
+						"type": "string",
+						"defaultValue": "SILVER_OLIST"
+					},
+					"TargetDirectory": {
+						"type": "string",
+						"defaultValue": "GOLD_OLIST"
+					}
+				},
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_DIM_GEOLOCATION')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_DIM_PRODUCTS')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Dim Products",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_03_GOLD_DIM_PRODUCTS",
+								"type": "DataFlowReference",
+								"parameters": {
+									"Directory": {
+										"value": "'@{pipeline().parameters.TargetDirectory}'",
+										"type": "Expression"
+									},
+									"FilePrefix": {
+										"value": "'@{pipeline().parameters.FileName}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"srcProducts": {
+										"Directory": "@{pipeline().parameters.SourceDirectory}/olist_products_dataset"
+									},
+									"snkDIMPRODUCTS": {
+										"Directory": {
+											"value": "@pipeline().parameters.TargetDirectory",
+											"type": "Expression"
+										},
+										"Table": {
+											"value": "@pipeline().parameters.FileName",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "DIM_PRODUCTS"
+					},
+					"SourceDirectory": {
+						"type": "string",
+						"defaultValue": "SILVER_OLIST"
+					},
+					"TargetDirectory": {
+						"type": "string",
+						"defaultValue": "GOLD_OLIST"
+					}
+				},
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_DIM_PRODUCTS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_DIM_SELLERS')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Dim Sellers",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_03_GOLD_DIM_SELLERS",
+								"type": "DataFlowReference",
+								"parameters": {
+									"Directory": {
+										"value": "'@{pipeline().parameters.TargetDirectory}'",
+										"type": "Expression"
+									},
+									"FilePrefix": {
+										"value": "'@{pipeline().parameters.FileName}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"srcSellers": {
+										"Directory": "@{pipeline().parameters.SourceDirectory}/olist_sellers_dataset"
+									},
+									"snkDIMSELLERS": {
+										"Directory": {
+											"value": "@pipeline().parameters.TargetDirectory",
+											"type": "Expression"
+										},
+										"Table": {
+											"value": "@pipeline().parameters.FileName",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "DIM_GEOLOCATION"
+					},
+					"SourceDirectory": {
+						"type": "string",
+						"defaultValue": "SILVER_OLIST"
+					},
+					"TargetDirectory": {
+						"type": "string",
+						"defaultValue": "GOLD_OLIST"
+					}
+				},
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_DIM_SELLERS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_FACT_ORDERS')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -3322,8 +3967,259 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_FACT_ORDERS')]",
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_FACT_ORDERS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_FACT_ORDER_ITEMS')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Process Fact Order Items",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_03_GOLD_FACT_ORDER_ITEMS",
+								"type": "DataFlowReference",
+								"parameters": {
+									"Directory": {
+										"value": "'@{pipeline().parameters.TargetDirectory}'",
+										"type": "Expression"
+									},
+									"FilePrefix": {
+										"value": "'@{pipeline().parameters.FileName}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"srcOrders": {
+										"Directory": "@{pipeline().parameters.SourceDirectory}/olist_order_items_dataset"
+									},
+									"snkFact": {
+										"Directory": {
+											"value": "@pipeline().parameters.TargetDirectory",
+											"type": "Expression"
+										},
+										"Table": {
+											"value": "@pipeline().parameters.FileName",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "FACT_ORDERS"
+					},
+					"SourceDirectory": {
+						"type": "string",
+						"defaultValue": "SILVER_OLIST"
+					},
+					"TargetDirectory": {
+						"type": "string",
+						"defaultValue": "GOLD_OLIST"
+					}
+				},
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_FACT_ORDER_ITEMS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_FACT_ORDER_PAYMENTS')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Process Order Payments",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_03_GOLD_FACT_ORDER_PAYMENTS",
+								"type": "DataFlowReference",
+								"parameters": {
+									"Directory": {
+										"value": "'@{pipeline().parameters.TargetDirectory}'",
+										"type": "Expression"
+									},
+									"FilePrefix": {
+										"value": "'@{pipeline().parameters.FileName}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"srcOrders": {
+										"Directory": "@{pipeline().parameters.SourceDirectory}/olist_order_payments_dataset"
+									},
+									"snkFact": {
+										"Directory": {
+											"value": "@pipeline().parameters.TargetDirectory",
+											"type": "Expression"
+										},
+										"Table": {
+											"value": "@pipeline().parameters.FileName",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "FACT_ORDER_PAYMENTS"
+					},
+					"SourceDirectory": {
+						"type": "string",
+						"defaultValue": "SILVER_OLIST"
+					},
+					"TargetDirectory": {
+						"type": "string",
+						"defaultValue": "GOLD_OLIST"
+					}
+				},
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_FACT_ORDER_PAYMENTS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_FACT_ORDER_REVIEWS')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Process Order Reviews",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_03_GOLD_FACT_ORDER_REVIEWS",
+								"type": "DataFlowReference",
+								"parameters": {
+									"Directory": {
+										"value": "'@{pipeline().parameters.TargetDirectory}'",
+										"type": "Expression"
+									},
+									"FilePrefix": {
+										"value": "'@{pipeline().parameters.FileName}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"srcOrderReviews": {
+										"Directory": "@{pipeline().parameters.SourceDirectory}/olist_order_reviews_dataset"
+									},
+									"snkFact": {
+										"Directory": {
+											"value": "@pipeline().parameters.TargetDirectory",
+											"type": "Expression"
+										},
+										"Table": {
+											"value": "@pipeline().parameters.FileName",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "FACT_ORDER_REVIEWS"
+					},
+					"SourceDirectory": {
+						"type": "string",
+						"defaultValue": "SILVER_OLIST"
+					},
+					"TargetDirectory": {
+						"type": "string",
+						"defaultValue": "GOLD_OLIST"
+					}
+				},
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_FACT_ORDER_REVIEWS')]"
 			]
 		},
 		{
@@ -3582,228 +4478,6 @@
 				"[concat(variables('workspaceId'), '/pipelines/pip_01_BRONZE_OlistGCP_GeoLocation')]",
 				"[concat(variables('workspaceId'), '/pipelines/pip_02_SILVER_Clean_OlistGCP')]",
 				"[concat(variables('workspaceId'), '/pipelines/pip_03_GOLD_DIM_GEOLOCATION')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/pip_00_Master_Olist')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Exec Customers Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_Customers_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec Products Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_Products_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec GeoLocation Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_GeoLocation_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec Sellers Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_Sellers_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec CategoryName Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_CategoryNameTranslation_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec Orders Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "wait Dims Facts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_Orders_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "wait Dims Facts",
-						"type": "Wait",
-						"dependsOn": [
-							{
-								"activity": "Exec Customers Olist",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Exec Products Olist",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Exec GeoLocation Olist",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Exec Sellers Olist",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Exec CategoryName Olist",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"waitTimeInSeconds": 1
-						}
-					},
-					{
-						"name": "Exec OrderItems Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "wait Dims Facts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_OrderItems_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec OrderPayments Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "wait Dims Facts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_OrderPayments_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Exec OrderReviews Olist",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "wait Dims Facts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "pip_OrderReviews_Olist",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "00_MASTER"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/pipelines/pip_Customers_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_Products_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_GeoLocation_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_Sellers_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_CategoryNameTranslation_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_Orders_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_OrderItems_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_OrderPayments_Olist')]",
-				"[concat(variables('workspaceId'), '/pipelines/pip_OrderReviews_Olist')]"
 			]
 		},
 		{
@@ -6954,6 +7628,421 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_DIM_CATEGORY_TRANSLATION')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "srcCategory"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "snkDIMCATEGORYTRANSLATION"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derDimensionColumns"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     Directory as string,",
+						"     FilePrefix as string",
+						"}",
+						"source(output(",
+						"          product_category_name as string,",
+						"          product_category_name_english as string,",
+						"          {_sourcefile} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> srcCategory",
+						"srcCategory derive(NM_PRODUCT_CATEGORY = initCap(product_category_name),",
+						"          NM_PRODUCT_CATEGORY_ENG = initCap(product_category_name_english),",
+						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet',",
+						"          {_sourcefile} = {_sourcefile}) ~> derDimensionColumns",
+						"derDimensionColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     rowUrlColumn:'_watermark',",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          NM_PRODUCT_CATEGORY,",
+						"          NM_PRODUCT_CATEGORY_ENG,",
+						"          {_sourcefile},",
+						"          {_watermark}",
+						"     )) ~> snkDIMCATEGORYTRANSLATION"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_DIM_CUSTOMERS')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "srcCustomer"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "snkDIMCUSTOMER"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derDimensionColumns"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     Directory as string,",
+						"     FilePrefix as string",
+						"}",
+						"source(output(",
+						"          customer_id as string,",
+						"          customer_unique_id as string,",
+						"          customer_zip_code_prefix as integer,",
+						"          customer_city as string,",
+						"          customer_state as string,",
+						"          {_sourcefile} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> srcCustomer",
+						"srcCustomer derive(ID_CUSTOMER = customer_id,",
+						"          ID_CUSTOMER_UNIQUE = customer_unique_id,",
+						"          NU_ZIP_CODE_PREFIX = customer_zip_code_prefix,",
+						"          NM_CUSTOMER_CITY = initCap(customer_city),",
+						"          CD_CUSTOMER_STATE = upper(customer_state),",
+						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet',",
+						"          {_sourcefile} = {_sourcefile}) ~> derDimensionColumns",
+						"derDimensionColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     rowUrlColumn:'_watermark',",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          ID_CUSTOMER,",
+						"          ID_CUSTOMER_UNIQUE,",
+						"          NU_ZIP_CODE_PREFIX,",
+						"          NM_CUSTOMER_CITY,",
+						"          CD_CUSTOMER_STATE,",
+						"          {_sourcefile}",
+						"     )) ~> snkDIMCUSTOMER"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_DIM_GEOLOCATION')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "srcGeoLocation"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "snkDIMGEOLOCATION"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derDimensionColumns"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     Directory as string,",
+						"     FilePrefix as string",
+						"}",
+						"source(output(",
+						"          geolocation_zip_code_prefix as integer,",
+						"          geolocation_lat as float,",
+						"          geolocation_lng as float,",
+						"          geolocation_city as string,",
+						"          geolocation_state as string,",
+						"          {_sourcefile} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> srcGeoLocation",
+						"srcGeoLocation derive(NU_ZIPCODE_PREFIX = geolocation_zip_code_prefix,",
+						"          FL_LATITUDE = geolocation_lat,",
+						"          FL_LONGITUDE = geolocation_lng,",
+						"          NM_CITY = initCap(geolocation_city),",
+						"          CD_STATE = upper(geolocation_state),",
+						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet',",
+						"          {_sourcefile} = {_sourcefile}) ~> derDimensionColumns",
+						"derDimensionColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     rowUrlColumn:'_watermark',",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          NU_ZIPCODE_PREFIX,",
+						"          FL_LATITUDE,",
+						"          FL_LONGITUDE,",
+						"          NM_CITY,",
+						"          CD_STATE,",
+						"          {_sourcefile},",
+						"          {_watermark}",
+						"     )) ~> snkDIMGEOLOCATION"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_DIM_PRODUCTS')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "srcProducts"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "snkDIMPRODUCTS"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derDimensionColumns"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     Directory as string,",
+						"     FilePrefix as string",
+						"}",
+						"source(output(",
+						"          product_id as string,",
+						"          product_category_name as string,",
+						"          product_name_lenght as integer,",
+						"          product_description_lenght as integer,",
+						"          product_photos_qty as integer,",
+						"          product_weight_g as integer,",
+						"          product_length_cm as integer,",
+						"          product_height_cm as integer,",
+						"          product_width_cm as integer,",
+						"          {_sourcefile} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> srcProducts",
+						"srcProducts derive(ID_PRODUCT = product_id,",
+						"          NM_CATEGORY = initCap(product_category_name),",
+						"          NU_NAME_LENGHT = product_name_lenght,",
+						"          NU_DESCRIPTION_LENGHT = product_description_lenght,",
+						"          QT_PHOTOS = product_photos_qty,",
+						"          NU_WEIGHT_G = product_weight_g,",
+						"          NU_HEIGHT_CM = product_height_cm,",
+						"          NU_WIDTH_CM = product_width_cm,",
+						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derDimensionColumns",
+						"derDimensionColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     rowUrlColumn:'_watermark',",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          ID_PRODUCT,",
+						"          NM_CATEGORY,",
+						"          NU_NAME_LENGHT,",
+						"          NU_DESCRIPTION_LENGHT,",
+						"          QT_PHOTOS,",
+						"          NU_WEIGHT_G,",
+						"          NU_HEIGHT_CM,",
+						"          NU_WIDTH_CM,",
+						"          {_sourcefile}",
+						"     )) ~> snkDIMPRODUCTS"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_DIM_SELLERS')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "srcSellers"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "snkDIMSELLERS"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derDimensionColumns"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     Directory as string,",
+						"     FilePrefix as string",
+						"}",
+						"source(output(",
+						"          seller_id as string,",
+						"          seller_zip_code_prefix as integer,",
+						"          seller_city as string,",
+						"          seller_state as string,",
+						"          {_sourcefile} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> srcSellers",
+						"srcSellers derive(ID_SELLER = seller_id,",
+						"          NU_ZIPCODE_PREFIX = seller_zip_code_prefix,",
+						"          NM_CITY = initCap(seller_city),",
+						"          CD_STATE = upper(seller_state),",
+						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet',",
+						"          {_sourcefile} = {_sourcefile}) ~> derDimensionColumns",
+						"derDimensionColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     rowUrlColumn:'_watermark',",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          ID_SELLER,",
+						"          NU_ZIPCODE_PREFIX,",
+						"          NM_CITY,",
+						"          CD_STATE,",
+						"          {_sourcefile},",
+						"          {_watermark}",
+						"     )) ~> snkDIMSELLERS"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_FACT_ORDERS')]",
 			"type": "Microsoft.Synapse/workspaces/dataflows",
 			"apiVersion": "2019-06-01-preview",
@@ -7054,6 +8143,279 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_FACT_ORDER_ITEMS')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "srcOrders"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "snkFact",
+							"rejectedDataLinkedService": {
+								"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "derNewColumns"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     Directory as string,",
+						"     FilePrefix as string",
+						"}",
+						"source(output(",
+						"          order_id as string,",
+						"          order_item_id as integer,",
+						"          product_id as string,",
+						"          seller_id as string,",
+						"          shipping_limit_date as date,",
+						"          price as float,",
+						"          freight_value as float,",
+						"          {_sourcefile} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: true,",
+						"     format: 'parquet') ~> srcOrders",
+						"srcOrders derive(ID_ORDER = order_id,",
+						"          ID_ORDER_ITEM = order_item_id,",
+						"          ID_PRODUCT = product_id,",
+						"          ID_SELLER = seller_id,",
+						"          DT_SHIPPING_LIMIT = shipping_limit_date,",
+						"          VL_PRICE = price,",
+						"          VL_FREIGHT = freight_value,",
+						"          {_sourcefile} = {_sourcefile},",
+						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derNewColumns",
+						"derNewColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     rowUrlColumn:'_watermark',",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     mapColumn(",
+						"          ID_ORDER,",
+						"          ID_ORDER_ITEM,",
+						"          ID_PRODUCT,",
+						"          ID_SELLER,",
+						"          DT_SHIPPING_LIMIT,",
+						"          VL_PRICE,",
+						"          VL_FREIGHT,",
+						"          {_sourcefile},",
+						"          {_watermark}",
+						"     )) ~> snkFact"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]",
+				"[concat(variables('workspaceId'), '/linkedServices/ws-pociob-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_FACT_ORDER_PAYMENTS')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "srcOrders"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "snkFact",
+							"rejectedDataLinkedService": {
+								"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "derNewColumns"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     Directory as string,",
+						"     FilePrefix as string",
+						"}",
+						"source(output(",
+						"          order_id as string,",
+						"          payment_sequential as integer,",
+						"          payment_type as string,",
+						"          payment_installments as integer,",
+						"          payment_value as float,",
+						"          {_sourcefile} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: true,",
+						"     format: 'parquet') ~> srcOrders",
+						"srcOrders derive(ID_ORDER = order_id,",
+						"          SQ_PAYMENT = payment_sequential,",
+						"          DS_TYPE = initCap(payment_type),",
+						"          NU_INSTALLMENTS = payment_installments,",
+						"          VL_PAYMENT = payment_value,",
+						"          {_sourcefile} = {_sourcefile},",
+						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derNewColumns",
+						"derNewColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     rowUrlColumn:'_watermark',",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     mapColumn(",
+						"          ID_ORDER,",
+						"          SQ_PAYMENT,",
+						"          DS_TYPE,",
+						"          NU_INSTALLMENTS,",
+						"          VL_PAYMENT,",
+						"          {_sourcefile},",
+						"          {_watermark}",
+						"     )) ~> snkFact"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]",
+				"[concat(variables('workspaceId'), '/linkedServices/ws-pociob-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_FACT_ORDER_REVIEWS')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "03_GOLD_OLIST"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "srcOrderReviews"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
+								"type": "DatasetReference"
+							},
+							"name": "snkFact",
+							"rejectedDataLinkedService": {
+								"referenceName": "ws-pociob-WorkspaceDefaultStorage",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "derNewColumns"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     Directory as string,",
+						"     FilePrefix as string",
+						"}",
+						"source(output(",
+						"          review_id as string,",
+						"          order_id as string,",
+						"          review_score as integer,",
+						"          review_comment_title as string,",
+						"          review_comment_message as string,",
+						"          review_creation_date as date,",
+						"          review_answer_timestamp as timestamp,",
+						"          {_sourcefile} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: true,",
+						"     format: 'parquet') ~> srcOrderReviews",
+						"srcOrderReviews derive(ID_ORDER = order_id,",
+						"          ID_REVIEW = review_id,",
+						"          NU_SCORE = review_score,",
+						"          DS_TITLE = initCap(review_comment_title),",
+						"          DS_MESSAGE = review_comment_message,",
+						"          DT_CREATION = review_creation_date,",
+						"          TM_ANSWER = review_answer_timestamp,",
+						"          {_sourcefile} = {_sourcefile},",
+						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derNewColumns",
+						"derNewColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     rowUrlColumn:'_watermark',",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     mapColumn(",
+						"          ID_ORDER,",
+						"          ID_REVIEW,",
+						"          NU_SCORE,",
+						"          DS_TITLE,",
+						"          DS_MESSAGE,",
+						"          DT_CREATION,",
+						"          TM_ANSWER,",
+						"          {_sourcefile},",
+						"          {_watermark}",
+						"     )) ~> snkFact"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
+				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]",
+				"[concat(variables('workspaceId'), '/linkedServices/ws-pociob-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
 			"type": "Microsoft.Synapse/workspaces/credentials",
 			"apiVersion": "2019-06-01-preview",
@@ -7064,52 +8426,12 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
+			"name": "[concat(parameters('workspaceName'), '/SQL script 20')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "select  name\nfrom    SYSOBJECTS\nWHERE\n  xtype = 'U';",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "Olist",
-						"poolName": "Olist"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 10')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT TOP (100) *\n FROM [GOLD_OLIST].[dbo].[FACT_ORDERS]",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "GOLD_OLIST",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 11')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT TOP (100) *\n FROM [03_GOLD_OLIST].[dbo].[FACT_ORDERS]",
+					"query": "SELECT TOP (100) [ID_PRODUCT]\n,[NM_CATEGORY]\n,[NU_NAME_LENGHT]\n,[NU_DESCRIPTION_LENGHT]\n,[QT_PHOTOS]\n,[NU_WEIGHT_G]\n,[NU_HEIGHT_CM]\n,[NU_WIDTH_CM]\n,[_sourcefile]\n FROM [03_GOLD_OLIST].[dbo].[DIM_PRODUCTS]",
 					"metadata": {
 						"language": "sql"
 					},
@@ -7120,415 +8442,6 @@
 					"resultLimit": 5000
 				},
 				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 12')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT TOP (100) [order_id]\n,[customer_id]\n,[order_status]\n,[order_purchase_timestamp]\n,[order_approved_at]\n,[order_delivered_carrier_date]\n,[order_delivered_customer_date]\n,[order_estimated_delivery_date]\n,[_sourcefile]\n FROM [Database1].[dbo].[olist_orders]",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "Database1",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 13')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT  *\nFROM    [03_GOLD_OLIS]",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "03_GOLD_OLIST",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 14')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "03_GOLD_OLIST",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 2')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT TOP (100) [name]\n,[object_id]\n,[principal_id]\n,[schema_id]\n,[parent_object_id]\n,[type]\n,[type_desc]\n,[create_date]\n,[modify_date]\n,[is_ms_shipped]\n,[is_published]\n,[is_schema_published]\n FROM [sys].[system_objects]\n where type = 'U'",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "Olist",
-						"poolName": "Olist"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 3')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT  *\nFROM    dbo.olist_sellers",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "Database1",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 4')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT TOP (100) [order_id]\n,[customer_id]\n,[order_status]\n,cast([order_purchase_timestamp] as datetime) as order_purchased\n,cast([order_approved_at] as datetime) as order_approved_at\n,cast([order_delivered_carrier_date] as datetime) as order_delivered_carrier_date\n,cast([order_delivered_customer_date] as datetime) as order_delivered_customer_date\n,cast([order_estimated_delivery_date] as datetime) as order_estimated_delivery_date\n,[_sourcefile]\n FROM [Database1].[dbo].[olist_orders]",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "Database1",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 5')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "Database1",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 6')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "Database2",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 7')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "Database2",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 8')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "GOLD_OLIST",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 9')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "GOLD_OLIST",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Notebook 1')]",
-			"type": "Microsoft.Synapse/workspaces/notebooks",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"nbformat": 4,
-				"nbformat_minor": 2,
-				"bigDataPool": {
-					"referenceName": "spkPool",
-					"type": "BigDataPoolReference"
-				},
-				"sessionProperties": {
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
-					"numExecutors": 2,
-					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "f2d4c817-3d7f-4de8-97e5-db0872c1c11c"
-					}
-				},
-				"metadata": {
-					"saveOutput": true,
-					"enableDebugMode": false,
-					"kernelspec": {
-						"name": "synapse_pyspark",
-						"display_name": "Synapse PySpark"
-					},
-					"language_info": {
-						"name": "sql"
-					},
-					"a365ComputeOptions": {
-						"id": "/subscriptions/7e9f5794-cc11-45c0-8ced-29f654880041/resourceGroups/rgPOCIOB/providers/Microsoft.Synapse/workspaces/ws-pociob/bigDataPools/spkPool",
-						"name": "spkPool",
-						"type": "Spark",
-						"endpoint": "https://ws-pociob.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spkPool",
-						"auth": {
-							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
-						},
-						"sparkVersion": "3.3",
-						"nodeCount": 10,
-						"cores": 4,
-						"memory": 28
-					},
-					"sessionKeepAliveTimeout": 30
-				},
-				"cells": [
-					{
-						"cell_type": "code",
-						"metadata": {
-							"microsoft": {
-								"language": "python"
-							}
-						},
-						"source": [
-							"%%pyspark\n",
-							"spark.sql(\"DROP DATABASE IF EXISTS default CASCADE\")"
-						],
-						"outputs": [],
-						"execution_count": 1
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Notebook 2')]",
-			"type": "Microsoft.Synapse/workspaces/notebooks",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"nbformat": 4,
-				"nbformat_minor": 2,
-				"bigDataPool": {
-					"referenceName": "spkPool",
-					"type": "BigDataPoolReference"
-				},
-				"sessionProperties": {
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
-					"numExecutors": 2,
-					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b2b6bb4f-231b-4da7-bf19-91ec81bc0a7f"
-					}
-				},
-				"metadata": {
-					"saveOutput": true,
-					"enableDebugMode": false,
-					"kernelspec": {
-						"name": "synapse_pyspark",
-						"display_name": "Synapse PySpark"
-					},
-					"language_info": {
-						"name": "python"
-					},
-					"a365ComputeOptions": {
-						"id": "/subscriptions/7e9f5794-cc11-45c0-8ced-29f654880041/resourceGroups/rgPOCIOB/providers/Microsoft.Synapse/workspaces/ws-pociob/bigDataPools/spkPool",
-						"name": "spkPool",
-						"type": "Spark",
-						"endpoint": "https://ws-pociob.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spkPool",
-						"auth": {
-							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
-						},
-						"sparkVersion": "3.3",
-						"nodeCount": 10,
-						"cores": 4,
-						"memory": 28
-					},
-					"sessionKeepAliveTimeout": 30
-				},
-				"cells": [
-					{
-						"cell_type": "code",
-						"metadata": {
-							"microsoft": {
-								"language": "python"
-							}
-						},
-						"source": [
-							"%%pyspark\n",
-							"spark.sql(\"DROP DATABASE IF EXISTS default CASCADE\")"
-						],
-						"outputs": [],
-						"execution_count": 1
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Notebook 3')]",
-			"type": "Microsoft.Synapse/workspaces/notebooks",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"nbformat": 4,
-				"nbformat_minor": 2,
-				"sessionProperties": {
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
-					"numExecutors": 2,
-					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "524e2a50-7ba7-4864-a9d5-80134cf558a3"
-					}
-				},
-				"metadata": {
-					"saveOutput": true,
-					"enableDebugMode": false,
-					"kernelspec": {
-						"name": "synapse_pyspark",
-						"display_name": "python"
-					},
-					"language_info": {
-						"name": "python"
-					},
-					"sessionKeepAliveTimeout": 30
-				},
-				"cells": [
-					{
-						"cell_type": "code",
-						"metadata": {
-							"microsoft": {
-								"language": "python"
-							}
-						},
-						"source": [
-							"%%pyspark\n",
-							"spark.sql(\"CREATE TABLE IF NOT EXISTS default.banan USING Parquet LOCATION 'YourFilePath'\")"
-						],
-						"outputs": [],
-						"execution_count": null
-					}
-				]
 			},
 			"dependsOn": []
 		},
@@ -8742,8 +9655,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "customer_unique_id",
@@ -8755,8 +9667,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "customer_zip_code_prefix",
@@ -8767,8 +9678,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "customer_city",
@@ -8780,8 +9690,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "customer_state",
@@ -8793,8 +9702,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -8806,8 +9714,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -8875,8 +9782,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "geolocation_lat",
@@ -8887,8 +9793,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "geolocation_lng",
@@ -8899,8 +9804,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "geolocation_city",
@@ -8912,8 +9816,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "geolocation_state",
@@ -8925,8 +9828,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -8938,8 +9840,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -9008,8 +9909,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "order_item_id",
@@ -9020,8 +9920,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "product_id",
@@ -9033,8 +9932,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "seller_id",
@@ -9046,8 +9944,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "shipping_limit_date",
@@ -9059,8 +9956,7 @@
 												"DateFormat": "YYYY-MM-DD",
 												"HIVE_TYPE_STRING": "date"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "price",
@@ -9071,8 +9967,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "freight_value",
@@ -9083,8 +9978,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -9096,8 +9990,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -9166,8 +10059,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "payment_sequential",
@@ -9178,8 +10070,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "payment_type",
@@ -9191,8 +10082,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "payment_installments",
@@ -9203,8 +10093,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "payment_value",
@@ -9215,8 +10104,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -9228,8 +10116,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -9298,8 +10185,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "payment_sequential",
@@ -9310,8 +10196,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "payment_type",
@@ -9323,8 +10208,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "payment_installments",
@@ -9335,8 +10219,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "payment_value",
@@ -9347,8 +10230,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -9360,8 +10242,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -9430,8 +10311,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "customer_id",
@@ -9443,8 +10323,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "order_status",
@@ -9456,8 +10335,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "order_purchase_timestamp",
@@ -9469,8 +10347,7 @@
 												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
 												"HIVE_TYPE_STRING": "timestamp"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "order_approved_at",
@@ -9482,8 +10359,7 @@
 												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
 												"HIVE_TYPE_STRING": "timestamp"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "order_delivered_carrier_date",
@@ -9495,8 +10371,7 @@
 												"DateFormat": "YYYY-MM-DD",
 												"HIVE_TYPE_STRING": "date"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "order_delivered_customer_date",
@@ -9508,8 +10383,7 @@
 												"DateFormat": "YYYY-MM-DD",
 												"HIVE_TYPE_STRING": "date"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "order_estimated_delivery_date",
@@ -9521,8 +10395,7 @@
 												"DateFormat": "YYYY-MM-DD",
 												"HIVE_TYPE_STRING": "date"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -9534,8 +10407,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -9604,8 +10476,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "product_category_name_english",
@@ -9617,8 +10488,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -9630,8 +10500,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -9700,8 +10569,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "product_category_name",
@@ -9713,8 +10581,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "product_name_lenght",
@@ -9725,8 +10592,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "product_description_lenght",
@@ -9737,8 +10603,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "product_photos_qty",
@@ -9749,8 +10614,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "product_weight_g",
@@ -9761,8 +10625,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "product_length_cm",
@@ -9773,8 +10636,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "product_height_cm",
@@ -9785,8 +10647,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "product_width_cm",
@@ -9797,8 +10658,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -9810,8 +10670,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -9880,8 +10739,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "seller_zip_code_prefix",
@@ -9892,8 +10750,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "seller_city",
@@ -9905,8 +10762,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "seller_state",
@@ -9918,8 +10774,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -9931,8 +10786,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -9980,71 +10834,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/spkPool')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"autoPause": {
-					"enabled": true,
-					"delayInMinutes": 15
-				},
-				"autoScale": {
-					"enabled": false,
-					"maxNodeCount": 10,
-					"minNodeCount": 3
-				},
-				"nodeCount": 10,
-				"nodeSize": "Small",
-				"nodeSizeFamily": "MemoryOptimized",
-				"sparkVersion": "3.3",
-				"isComputeIsolationEnabled": false,
-				"sessionLevelPackagesEnabled": false,
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "eastus"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 15')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT  *\nFRP",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "03_GOLD_OLIST",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 16')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT TOP (100) [customer_id]\n,[customer_unique_id]\n,[customer_zip_code_prefix]\n,[customer_city]\n,[customer_state]\n FROM [01_BRONZE_OLIST].[dbo].[olist_customers]",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "01_BRONZE_OLIST",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/03_GOLD_OLIST')]",
 			"type": "Microsoft.Synapse/workspaces/databases",
 			"apiVersion": "2019-06-01-preview",
@@ -10079,7 +10868,7 @@
 						"ActionType": "CREATE",
 						"OldEntity": null,
 						"NewEntity": {
-							"Name": "FACT_ORDERS",
+							"Name": "DIM_CATEGORY_TRANSLATION",
 							"EntityType": "TABLE",
 							"Namespace": {
 								"DatabaseName": "03_GOLD_OLIST"
@@ -10092,7 +10881,7 @@
 							"StorageDescriptor": {
 								"Columns": [
 									{
-										"Name": "ID_ORDER",
+										"Name": "NM_PRODUCT_CATEGORY",
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -10101,11 +10890,10 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
-										"Name": "ID_CUSTOMER",
+										"Name": "NM_PRODUCT_CATEGORY_ENG",
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -10114,86 +10902,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
-									},
-									{
-										"Name": "TM_PURCHASE",
-										"OriginDataTypeName": {
-											"TypeName": "timestamp",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
-												"HIVE_TYPE_STRING": "timestamp"
-											}
-										},
-										"DeltaFormatInvalidMessages": []
-									},
-									{
-										"Name": "TM_APPROVED",
-										"OriginDataTypeName": {
-											"TypeName": "timestamp",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
-												"HIVE_TYPE_STRING": "timestamp"
-											}
-										},
-										"DeltaFormatInvalidMessages": []
-									},
-									{
-										"Name": "DT_DELIVERED_CARRIER",
-										"OriginDataTypeName": {
-											"TypeName": "date",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"DateFormat": "YYYY-MM-DD",
-												"HIVE_TYPE_STRING": "date"
-											}
-										},
-										"DeltaFormatInvalidMessages": []
-									},
-									{
-										"Name": "DT_DELIVERED_CUSTOMER",
-										"OriginDataTypeName": {
-											"TypeName": "date",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"DateFormat": "YYYY-MM-DD",
-												"HIVE_TYPE_STRING": "date"
-											}
-										},
-										"DeltaFormatInvalidMessages": []
-									},
-									{
-										"Name": "DT_DELIVERY_ESTIMATED",
-										"OriginDataTypeName": {
-											"TypeName": "date",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"DateFormat": "YYYY-MM-DD",
-												"HIVE_TYPE_STRING": "date"
-											}
-										},
-										"DeltaFormatInvalidMessages": []
-									},
-									{
-										"Name": "DS_STATUS",
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -10205,8 +10914,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -10215,13 +10923,13 @@
 									"FormatType": "parquet",
 									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
 									"Properties": {
-										"path": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/FACT_ORDERS",
+										"path": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/DIM_CATEGORY_TRANSLATION",
 										"FormatTypeSetToDatabaseDefault": false
 									}
 								},
 								"Source": {
 									"Provider": "ADLS",
-									"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/FACT_ORDERS",
+									"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/DIM_CATEGORY_TRANSLATION",
 									"Properties": {
 										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
 										"LocationSetToDatabaseDefault": false
@@ -10229,7 +10937,7 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"compression": "",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
@@ -10275,8 +10983,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ID_CUSTOMER_UNIQUE",
@@ -10288,8 +10995,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "NU_ZIP_CODE_PREFIX",
@@ -10300,8 +11006,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "NM_CUSTOMER_CITY",
@@ -10313,8 +11018,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "CD_CUSTOMER_STATE",
@@ -10326,8 +11030,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -10339,8 +11042,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -10387,6 +11089,132 @@
 						"ActionType": "CREATE",
 						"OldEntity": null,
 						"NewEntity": {
+							"Name": "DIM_GEOLOCATION",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "03_GOLD_OLIST"
+							},
+							"Description": "",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "NU_ZIPCODE_PREFIX",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										}
+									},
+									{
+										"Name": "FL_LATITUDE",
+										"OriginDataTypeName": {
+											"TypeName": "float",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "float"
+											}
+										}
+									},
+									{
+										"Name": "FL_LONGITUDE",
+										"OriginDataTypeName": {
+											"TypeName": "float",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "float"
+											}
+										}
+									},
+									{
+										"Name": "NM_CITY",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "CD_STATE",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									},
+									{
+										"Name": "_sourcefile",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
+									"FormatType": "parquet",
+									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
+									"Properties": {
+										"path": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/DIM_GEOLOCATION",
+										"FormatTypeSetToDatabaseDefault": false
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/DIM_GEOLOCATION",
+									"Properties": {
+										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": false
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"Description": "",
+								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
+								"PrimaryKeys": "",
+								"spark.sql.sources.provider": "parquet"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
 							"Name": "DIM_PRODUCTS",
 							"EntityType": "TABLE",
 							"Namespace": {
@@ -10409,8 +11237,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "NM_CATEGORY",
@@ -10422,8 +11249,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "NU_NAME_LENGHT",
@@ -10434,8 +11260,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "NU_DESCRIPTION_LENGHT",
@@ -10446,8 +11271,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "QT_PHOTOS",
@@ -10458,8 +11282,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "NU_WEIGHT_G",
@@ -10470,8 +11293,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "NU_HEIGHT_CM",
@@ -10482,8 +11304,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "NU_WIDTH_CM",
@@ -10494,8 +11315,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -10507,8 +11327,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -10577,8 +11396,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "NU_ZIPCODE_PREFIX",
@@ -10589,8 +11407,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "NM_CITY",
@@ -10602,8 +11419,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "CD_STATE",
@@ -10615,8 +11431,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -10628,8 +11443,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -10676,7 +11490,7 @@
 						"ActionType": "CREATE",
 						"OldEntity": null,
 						"NewEntity": {
-							"Name": "DIM_GEOLOCATION",
+							"Name": "FACT_ORDERS",
 							"EntityType": "TABLE",
 							"Namespace": {
 								"DatabaseName": "03_GOLD_OLIST"
@@ -10689,43 +11503,7 @@
 							"StorageDescriptor": {
 								"Columns": [
 									{
-										"Name": "NU_ZIPCODE_PREFIX",
-										"OriginDataTypeName": {
-											"TypeName": "integer",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"HIVE_TYPE_STRING": "integer"
-											}
-										},
-										"DeltaFormatInvalidMessages": []
-									},
-									{
-										"Name": "FL_LATITUDE",
-										"OriginDataTypeName": {
-											"TypeName": "float",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"HIVE_TYPE_STRING": "float"
-											}
-										},
-										"DeltaFormatInvalidMessages": []
-									},
-									{
-										"Name": "FL_LONGITUDE",
-										"OriginDataTypeName": {
-											"TypeName": "float",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Properties": {
-												"HIVE_TYPE_STRING": "float"
-											}
-										},
-										"DeltaFormatInvalidMessages": []
-									},
-									{
-										"Name": "NM_CITY",
+										"Name": "ID_ORDER",
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -10734,11 +11512,10 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
-										"Name": "CD_STATE",
+										"Name": "ID_CUSTOMER",
 										"OriginDataTypeName": {
 											"TypeName": "string",
 											"IsComplexType": false,
@@ -10747,8 +11524,79 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
+									},
+									{
+										"Name": "TM_PURCHASE",
+										"OriginDataTypeName": {
+											"TypeName": "timestamp",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+												"HIVE_TYPE_STRING": "timestamp"
+											}
+										}
+									},
+									{
+										"Name": "TM_APPROVED",
+										"OriginDataTypeName": {
+											"TypeName": "timestamp",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+												"HIVE_TYPE_STRING": "timestamp"
+											}
+										}
+									},
+									{
+										"Name": "DT_DELIVERED_CARRIER",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										}
+									},
+									{
+										"Name": "DT_DELIVERED_CUSTOMER",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										}
+									},
+									{
+										"Name": "DT_DELIVERY_ESTIMATED",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										}
+									},
+									{
+										"Name": "DS_STATUS",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 8000,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -10760,8 +11608,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -10770,13 +11617,13 @@
 									"FormatType": "parquet",
 									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
 									"Properties": {
-										"path": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/DIM_GEOLOCATION",
+										"path": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/FACT_ORDERS",
 										"FormatTypeSetToDatabaseDefault": false
 									}
 								},
 								"Source": {
 									"Provider": "ADLS",
-									"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/DIM_GEOLOCATION",
+									"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/FACT_ORDERS",
 									"Properties": {
 										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
 										"LocationSetToDatabaseDefault": false
@@ -10784,103 +11631,7 @@
 								},
 								"Properties": {
 									"textinputformat.record.delimiter": ",",
-									"compression": "",
-									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
-								},
-								"Compressed": false,
-								"IsStoredAsSubdirectories": false
-							},
-							"Properties": {
-								"Description": "",
-								"DisplayFolderInfo": "{\"name\":\"Others\",\"colorCode\":\"\"}",
-								"PrimaryKeys": "",
-								"spark.sql.sources.provider": "parquet"
-							},
-							"Retention": 0,
-							"Temporary": false,
-							"IsRewriteEnabled": false
-						},
-						"Source": {
-							"Type": "SPARK"
-						}
-					},
-					{
-						"ActionType": "CREATE",
-						"OldEntity": null,
-						"NewEntity": {
-							"Name": "DIM_CATEGORY_TRANSLATION",
-							"EntityType": "TABLE",
-							"Namespace": {
-								"DatabaseName": "03_GOLD_OLIST"
-							},
-							"Description": "",
-							"TableType": "EXTERNAL",
-							"Origin": {
-								"Type": "SPARK"
-							},
-							"StorageDescriptor": {
-								"Columns": [
-									{
-										"Name": "NM_PRODUCT_CATEGORY",
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										},
-										"DeltaFormatInvalidMessages": []
-									},
-									{
-										"Name": "NM_PRODUCT_CATEGORY_ENG",
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										},
-										"DeltaFormatInvalidMessages": []
-									},
-									{
-										"Name": "_sourcefile",
-										"OriginDataTypeName": {
-											"TypeName": "string",
-											"IsComplexType": false,
-											"IsNullable": true,
-											"Length": 8000,
-											"Properties": {
-												"HIVE_TYPE_STRING": "string"
-											}
-										},
-										"DeltaFormatInvalidMessages": []
-									}
-								],
-								"Format": {
-									"InputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat",
-									"OutputFormat": "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat",
-									"FormatType": "parquet",
-									"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
-									"Properties": {
-										"path": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/DIM_CATEGORY_TRANSLATION",
-										"FormatTypeSetToDatabaseDefault": false
-									}
-								},
-								"Source": {
-									"Provider": "ADLS",
-									"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/DIM_CATEGORY_TRANSLATION",
-									"Properties": {
-										"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
-										"LocationSetToDatabaseDefault": false
-									}
-								},
-								"Properties": {
-									"textinputformat.record.delimiter": ",",
-									"compression": "",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
 									"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 								},
 								"Compressed": false,
@@ -10926,8 +11677,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ID_ORDER_ITEM",
@@ -10938,8 +11688,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ID_PRODUCT",
@@ -10951,8 +11700,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ID_SELLER",
@@ -10964,8 +11712,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "DT_SHIPPING_LIMIT",
@@ -10977,8 +11724,7 @@
 												"DateFormat": "YYYY-MM-DD",
 												"HIVE_TYPE_STRING": "date"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "VL_PRICE",
@@ -10989,8 +11735,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "VL_FREIGHT",
@@ -11001,8 +11746,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -11014,8 +11758,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -11084,8 +11827,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "SQ_PAYMENT",
@@ -11096,8 +11838,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "DS_TYPE",
@@ -11109,8 +11850,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "NU_INSTALLMENTS",
@@ -11121,8 +11861,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "VL_PAYMENT",
@@ -11133,8 +11872,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "float"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -11146,8 +11884,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -11216,8 +11953,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "ID_REVIEW",
@@ -11229,8 +11965,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "NU_SCORE",
@@ -11241,8 +11976,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "integer"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "DS_TITLE",
@@ -11254,8 +11988,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "DS_MESSAGE",
@@ -11267,8 +12000,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "DT_CREATION",
@@ -11280,8 +12012,7 @@
 												"DateFormat": "YYYY-MM-DD",
 												"HIVE_TYPE_STRING": "date"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "TM_ANSWER",
@@ -11293,8 +12024,7 @@
 												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
 												"HIVE_TYPE_STRING": "timestamp"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									},
 									{
 										"Name": "_sourcefile",
@@ -11306,8 +12036,7 @@
 											"Properties": {
 												"HIVE_TYPE_STRING": "string"
 											}
-										},
-										"DeltaFormatInvalidMessages": []
+										}
 									}
 								],
 								"Format": {
@@ -11355,1438 +12084,29 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_DIM_CUSTOMERS')]",
-			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"name": "[concat(parameters('workspaceName'), '/spkPool')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"folder": {
-					"name": "03_GOLD_OLIST"
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 15
 				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "srcCustomer"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "snkDIMCUSTOMER"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derDimensionColumns"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     Directory as string,",
-						"     FilePrefix as string",
-						"}",
-						"source(output(",
-						"          customer_id as string,",
-						"          customer_unique_id as string,",
-						"          customer_zip_code_prefix as integer,",
-						"          customer_city as string,",
-						"          customer_state as string,",
-						"          {_sourcefile} as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> srcCustomer",
-						"srcCustomer derive(ID_CUSTOMER = customer_id,",
-						"          ID_CUSTOMER_UNIQUE = customer_unique_id,",
-						"          NU_ZIP_CODE_PREFIX = customer_zip_code_prefix,",
-						"          NM_CUSTOMER_CITY = initCap(customer_city),",
-						"          CD_CUSTOMER_STATE = upper(customer_state),",
-						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet',",
-						"          {_sourcefile} = {_sourcefile}) ~> derDimensionColumns",
-						"derDimensionColumns sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'parquet',",
-						"     rowUrlColumn:'_watermark',",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          ID_CUSTOMER,",
-						"          ID_CUSTOMER_UNIQUE,",
-						"          NU_ZIP_CODE_PREFIX,",
-						"          NM_CUSTOMER_CITY,",
-						"          CD_CUSTOMER_STATE,",
-						"          {_sourcefile}",
-						"     )) ~> snkDIMCUSTOMER"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_DIM_CUSTOMERS')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Dim Customers",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_03_GOLD_DIM_CUSTOMERS",
-								"type": "DataFlowReference",
-								"parameters": {
-									"Directory": {
-										"value": "'@{pipeline().parameters.TargetDirectory}'",
-										"type": "Expression"
-									},
-									"FilePrefix": {
-										"value": "'@{pipeline().parameters.FileName}'",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"srcCustomer": {
-										"Directory": {
-											"value": "@{pipeline().parameters.SourceDirectory}/olist_customers_dataset",
-											"type": "Expression"
-										}
-									},
-									"snkDIMCUSTOMER": {
-										"Directory": {
-											"value": "@pipeline().parameters.TargetDirectory",
-											"type": "Expression"
-										},
-										"Table": {
-											"value": "@pipeline().parameters.FileName",
-											"type": "Expression"
-										}
-									}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+				"autoScale": {
+					"enabled": false,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
 				},
-				"parameters": {
-					"FileName": {
-						"type": "string",
-						"defaultValue": "DIM_CUSTOMERS"
-					},
-					"SourceDirectory": {
-						"type": "string",
-						"defaultValue": "SILVER_OLIST"
-					},
-					"TargetDirectory": {
-						"type": "string",
-						"defaultValue": "GOLD_OLIST"
-					}
-				},
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
+				"nodeCount": 10,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.3",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_DIM_CUSTOMERS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_DIM_PRODUCTS')]",
-			"type": "Microsoft.Synapse/workspaces/dataflows",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "srcProducts"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "snkDIMPRODUCTS"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derDimensionColumns"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     Directory as string,",
-						"     FilePrefix as string",
-						"}",
-						"source(output(",
-						"          product_id as string,",
-						"          product_category_name as string,",
-						"          product_name_lenght as integer,",
-						"          product_description_lenght as integer,",
-						"          product_photos_qty as integer,",
-						"          product_weight_g as integer,",
-						"          product_length_cm as integer,",
-						"          product_height_cm as integer,",
-						"          product_width_cm as integer,",
-						"          {_sourcefile} as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> srcProducts",
-						"srcProducts derive(ID_PRODUCT = product_id,",
-						"          NM_CATEGORY = initCap(product_category_name),",
-						"          NU_NAME_LENGHT = product_name_lenght,",
-						"          NU_DESCRIPTION_LENGHT = product_description_lenght,",
-						"          QT_PHOTOS = product_photos_qty,",
-						"          NU_WEIGHT_G = product_weight_g,",
-						"          NU_HEIGHT_CM = product_height_cm,",
-						"          NU_WIDTH_CM = product_width_cm,",
-						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derDimensionColumns",
-						"derDimensionColumns sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'parquet',",
-						"     rowUrlColumn:'_watermark',",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          ID_PRODUCT,",
-						"          NM_CATEGORY,",
-						"          NU_NAME_LENGHT,",
-						"          NU_DESCRIPTION_LENGHT,",
-						"          QT_PHOTOS,",
-						"          NU_WEIGHT_G,",
-						"          NU_HEIGHT_CM,",
-						"          NU_WIDTH_CM,",
-						"          {_sourcefile}",
-						"     )) ~> snkDIMPRODUCTS"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_DIM_PRODUCTS')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Dim Products",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_03_GOLD_DIM_PRODUCTS",
-								"type": "DataFlowReference",
-								"parameters": {
-									"Directory": {
-										"value": "'@{pipeline().parameters.TargetDirectory}'",
-										"type": "Expression"
-									},
-									"FilePrefix": {
-										"value": "'@{pipeline().parameters.FileName}'",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"srcProducts": {
-										"Directory": "@{pipeline().parameters.SourceDirectory}/olist_customers_dataset"
-									},
-									"snkDIMPRODUCTS": {
-										"Directory": {
-											"value": "@pipeline().parameters.TargetDirectory",
-											"type": "Expression"
-										},
-										"Table": {
-											"value": "@pipeline().parameters.FileName",
-											"type": "Expression"
-										}
-									}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string",
-						"defaultValue": "DIM_PRODUCTS"
-					},
-					"SourceDirectory": {
-						"type": "string",
-						"defaultValue": "SILVER_OLIST"
-					},
-					"TargetDirectory": {
-						"type": "string",
-						"defaultValue": "GOLD_OLIST"
-					}
-				},
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_DIM_PRODUCTS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_DIM_GEOLOCATION')]",
-			"type": "Microsoft.Synapse/workspaces/dataflows",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "srcGeoLocation"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "snkDIMGEOLOCATION"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derDimensionColumns"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     Directory as string,",
-						"     FilePrefix as string",
-						"}",
-						"source(output(",
-						"          geolocation_zip_code_prefix as integer,",
-						"          geolocation_lat as float,",
-						"          geolocation_lng as float,",
-						"          geolocation_city as string,",
-						"          geolocation_state as string,",
-						"          {_sourcefile} as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> srcGeoLocation",
-						"srcGeoLocation derive(NU_ZIPCODE_PREFIX = geolocation_zip_code_prefix,",
-						"          FL_LATITUDE = geolocation_lat,",
-						"          FL_LONGITUDE = geolocation_lng,",
-						"          NM_CITY = initCap(geolocation_city),",
-						"          CD_STATE = upper(geolocation_state),",
-						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet',",
-						"          {_sourcefile} = {_sourcefile}) ~> derDimensionColumns",
-						"derDimensionColumns sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'parquet',",
-						"     rowUrlColumn:'_watermark',",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          NU_ZIPCODE_PREFIX,",
-						"          FL_LATITUDE,",
-						"          FL_LONGITUDE,",
-						"          NM_CITY,",
-						"          CD_STATE,",
-						"          {_sourcefile},",
-						"          {_watermark}",
-						"     )) ~> snkDIMGEOLOCATION"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 17')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "02_SILVER_OLIST",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 18')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT TOP (100) *\n FROM [02_SILVER_OLIST].[dbo].[oli]",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "02_SILVER_OLIST",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 19')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT TOP (100) [geolocation_zip_code_prefix]\n,[geolocation_lat]\n,[geolocation_lng]\n,[geolocation_city]\n,[geolocation_state]\n,[_sourcefile]\n FROM [02_SILVER_OLIST].[dbo].[olist_geolocation]",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "02_SILVER_OLIST",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_DIM_GEOLOCATION')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Dim Geolocation",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_03_GOLD_DIM_GEOLOCATION",
-								"type": "DataFlowReference",
-								"parameters": {
-									"Directory": {
-										"value": "'@{pipeline().parameters.TargetDirectory}'",
-										"type": "Expression"
-									},
-									"FilePrefix": {
-										"value": "'@{pipeline().parameters.FileName}'",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"srcGeoLocation": {
-										"Directory": "@{pipeline().parameters.SourceDirectory}/olist_geolocation_dataset"
-									},
-									"snkDIMGEOLOCATION": {
-										"Directory": {
-											"value": "@pipeline().parameters.TargetDirectory",
-											"type": "Expression"
-										},
-										"Table": {
-											"value": "@pipeline().parameters.FileName",
-											"type": "Expression"
-										}
-									}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string",
-						"defaultValue": "DIM_GEOLOCATION"
-					},
-					"SourceDirectory": {
-						"type": "string",
-						"defaultValue": "SILVER_OLIST"
-					},
-					"TargetDirectory": {
-						"type": "string",
-						"defaultValue": "GOLD_OLIST"
-					}
-				},
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_DIM_GEOLOCATION')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_DIM_SELLERS')]",
-			"type": "Microsoft.Synapse/workspaces/dataflows",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "srcSellers"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "snkDIMSELLERS"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derDimensionColumns"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     Directory as string,",
-						"     FilePrefix as string",
-						"}",
-						"source(output(",
-						"          seller_id as string,",
-						"          seller_zip_code_prefix as integer,",
-						"          seller_city as string,",
-						"          seller_state as string,",
-						"          {_sourcefile} as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> srcSellers",
-						"srcSellers derive(ID_SELLER = seller_id,",
-						"          NU_ZIPCODE_PREFIX = seller_zip_code_prefix,",
-						"          NM_CITY = initCap(seller_city),",
-						"          CD_STATE = upper(seller_state),",
-						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet',",
-						"          {_sourcefile} = {_sourcefile}) ~> derDimensionColumns",
-						"derDimensionColumns sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'parquet',",
-						"     rowUrlColumn:'_watermark',",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          ID_SELLER,",
-						"          NU_ZIPCODE_PREFIX,",
-						"          NM_CITY,",
-						"          CD_STATE,",
-						"          {_sourcefile},",
-						"          {_watermark}",
-						"     )) ~> snkDIMSELLERS"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_DIM_SELLERS')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Dim Sellers",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_03_GOLD_DIM_SELLERS",
-								"type": "DataFlowReference",
-								"parameters": {
-									"Directory": {
-										"value": "'@{pipeline().parameters.TargetDirectory}'",
-										"type": "Expression"
-									},
-									"FilePrefix": {
-										"value": "'@{pipeline().parameters.FileName}'",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"srcSellers": {
-										"Directory": "@{pipeline().parameters.SourceDirectory}/olist_sellers_dataset"
-									},
-									"snkDIMSELLERS": {
-										"Directory": {
-											"value": "@pipeline().parameters.TargetDirectory",
-											"type": "Expression"
-										},
-										"Table": {
-											"value": "@pipeline().parameters.FileName",
-											"type": "Expression"
-										}
-									}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string",
-						"defaultValue": "DIM_GEOLOCATION"
-					},
-					"SourceDirectory": {
-						"type": "string",
-						"defaultValue": "SILVER_OLIST"
-					},
-					"TargetDirectory": {
-						"type": "string",
-						"defaultValue": "GOLD_OLIST"
-					}
-				},
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_DIM_SELLERS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_DIM_CATEGORY_TRANSLATION')]",
-			"type": "Microsoft.Synapse/workspaces/dataflows",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "srcCategory"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "snkDIMCATEGORYTRANSLATION"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derDimensionColumns"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     Directory as string,",
-						"     FilePrefix as string",
-						"}",
-						"source(output(",
-						"          product_category_name as string,",
-						"          product_category_name_english as string,",
-						"          {_sourcefile} as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> srcCategory",
-						"srcCategory derive(NM_PRODUCT_CATEGORY = initCap(product_category_name),",
-						"          NM_PRODUCT_CATEGORY_ENG = initCap(product_category_name_english),",
-						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet',",
-						"          {_sourcefile} = {_sourcefile}) ~> derDimensionColumns",
-						"derDimensionColumns sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'parquet',",
-						"     rowUrlColumn:'_watermark',",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          NM_PRODUCT_CATEGORY,",
-						"          NM_PRODUCT_CATEGORY_ENG,",
-						"          {_sourcefile},",
-						"          {_watermark}",
-						"     )) ~> snkDIMCATEGORYTRANSLATION"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_DIM_CATEGORY_TRANSLATION')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Dim Category Translation",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_03_GOLD_DIM_CATEGORY_TRANSLATION",
-								"type": "DataFlowReference",
-								"parameters": {
-									"Directory": {
-										"value": "'@{pipeline().parameters.TargetDirectory}'",
-										"type": "Expression"
-									},
-									"FilePrefix": {
-										"value": "'@{pipeline().parameters.FileName}'",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"srcCategory": {
-										"Directory": "@{pipeline().parameters.SourceDirectory}/product_category_name_translation"
-									},
-									"snkDIMCATEGORYTRANSLATION": {
-										"Directory": {
-											"value": "@pipeline().parameters.TargetDirectory",
-											"type": "Expression"
-										},
-										"Table": {
-											"value": "@pipeline().parameters.FileName",
-											"type": "Expression"
-										}
-									}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string",
-						"defaultValue": "DIM_CATEGORY_TRANSLATION"
-					},
-					"SourceDirectory": {
-						"type": "string",
-						"defaultValue": "SILVER_OLIST"
-					},
-					"TargetDirectory": {
-						"type": "string",
-						"defaultValue": "GOLD_OLIST"
-					}
-				},
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_DIM_CATEGORY_TRANSLATION')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_FACT_ORDER_ITEMS')]",
-			"type": "Microsoft.Synapse/workspaces/dataflows",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "srcOrders"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "snkFact",
-							"rejectedDataLinkedService": {
-								"referenceName": "ws-pociob-WorkspaceDefaultStorage",
-								"type": "LinkedServiceReference"
-							}
-						}
-					],
-					"transformations": [
-						{
-							"name": "derNewColumns"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     Directory as string,",
-						"     FilePrefix as string",
-						"}",
-						"source(output(",
-						"          order_id as string,",
-						"          order_item_id as integer,",
-						"          product_id as string,",
-						"          seller_id as string,",
-						"          shipping_limit_date as date,",
-						"          price as float,",
-						"          freight_value as float,",
-						"          {_sourcefile} as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: true,",
-						"     format: 'parquet') ~> srcOrders",
-						"srcOrders derive(ID_ORDER = order_id,",
-						"          ID_ORDER_ITEM = order_item_id,",
-						"          ID_PRODUCT = product_id,",
-						"          ID_SELLER = seller_id,",
-						"          DT_SHIPPING_LIMIT = shipping_limit_date,",
-						"          VL_PRICE = price,",
-						"          VL_FREIGHT = freight_value,",
-						"          {_sourcefile} = {_sourcefile},",
-						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derNewColumns",
-						"derNewColumns sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'parquet',",
-						"     rowUrlColumn:'_watermark',",
-						"     truncate: true,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     mapColumn(",
-						"          ID_ORDER,",
-						"          ID_ORDER_ITEM,",
-						"          ID_PRODUCT,",
-						"          ID_SELLER,",
-						"          DT_SHIPPING_LIMIT,",
-						"          VL_PRICE,",
-						"          VL_FREIGHT,",
-						"          {_sourcefile},",
-						"          {_watermark}",
-						"     )) ~> snkFact"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]",
-				"[concat(variables('workspaceId'), '/linkedServices/ws-pociob-WorkspaceDefaultStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_FACT_ORDER_ITEMS')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Process Fact Order Items",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_03_GOLD_FACT_ORDER_ITEMS",
-								"type": "DataFlowReference",
-								"parameters": {
-									"Directory": {
-										"value": "'@{pipeline().parameters.TargetDirectory}'",
-										"type": "Expression"
-									},
-									"FilePrefix": {
-										"value": "'@{pipeline().parameters.FileName}'",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"srcOrders": {
-										"Directory": "@{pipeline().parameters.SourceDirectory}/olist_order_items_dataset"
-									},
-									"snkFact": {
-										"Directory": {
-											"value": "@pipeline().parameters.TargetDirectory",
-											"type": "Expression"
-										},
-										"Table": {
-											"value": "@pipeline().parameters.FileName",
-											"type": "Expression"
-										}
-									}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string",
-						"defaultValue": "FACT_ORDERS"
-					},
-					"SourceDirectory": {
-						"type": "string",
-						"defaultValue": "SILVER_OLIST"
-					},
-					"TargetDirectory": {
-						"type": "string",
-						"defaultValue": "GOLD_OLIST"
-					}
-				},
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_FACT_ORDER_ITEMS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_FACT_ORDER_PAYMENTS')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Process Order Payments",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_03_GOLD_FACT_ORDER_PAYMENTS",
-								"type": "DataFlowReference",
-								"parameters": {
-									"Directory": {
-										"value": "'@{pipeline().parameters.TargetDirectory}'",
-										"type": "Expression"
-									},
-									"FilePrefix": {
-										"value": "'@{pipeline().parameters.FileName}'",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"srcOrders": {
-										"Directory": "@{pipeline().parameters.SourceDirectory}/olist_order_payments_dataset"
-									},
-									"snkFact": {
-										"Directory": {
-											"value": "@pipeline().parameters.TargetDirectory",
-											"type": "Expression"
-										},
-										"Table": {
-											"value": "@pipeline().parameters.FileName",
-											"type": "Expression"
-										}
-									}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string",
-						"defaultValue": "FACT_ORDER_PAYMENTS"
-					},
-					"SourceDirectory": {
-						"type": "string",
-						"defaultValue": "SILVER_OLIST"
-					},
-					"TargetDirectory": {
-						"type": "string",
-						"defaultValue": "GOLD_OLIST"
-					}
-				},
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_FACT_ORDER_PAYMENTS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_FACT_ORDER_PAYMENTS')]",
-			"type": "Microsoft.Synapse/workspaces/dataflows",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "srcOrders"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "snkFact",
-							"rejectedDataLinkedService": {
-								"referenceName": "ws-pociob-WorkspaceDefaultStorage",
-								"type": "LinkedServiceReference"
-							}
-						}
-					],
-					"transformations": [
-						{
-							"name": "derNewColumns"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     Directory as string,",
-						"     FilePrefix as string",
-						"}",
-						"source(output(",
-						"          order_id as string,",
-						"          payment_sequential as integer,",
-						"          payment_type as string,",
-						"          payment_installments as integer,",
-						"          payment_value as float,",
-						"          {_sourcefile} as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: true,",
-						"     format: 'parquet') ~> srcOrders",
-						"srcOrders derive(ID_ORDER = order_id,",
-						"          SQ_PAYMENT = payment_sequential,",
-						"          DS_TYPE = initCap(payment_type),",
-						"          NU_INSTALLMENTS = payment_installments,",
-						"          VL_PAYMENT = payment_value,",
-						"          {_sourcefile} = {_sourcefile},",
-						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derNewColumns",
-						"derNewColumns sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'parquet',",
-						"     rowUrlColumn:'_watermark',",
-						"     truncate: true,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     mapColumn(",
-						"          ID_ORDER,",
-						"          SQ_PAYMENT,",
-						"          DS_TYPE,",
-						"          NU_INSTALLMENTS,",
-						"          VL_PAYMENT,",
-						"          {_sourcefile},",
-						"          {_watermark}",
-						"     )) ~> snkFact"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]",
-				"[concat(variables('workspaceId'), '/linkedServices/ws-pociob-WorkspaceDefaultStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/df_03_GOLD_FACT_ORDER_REVIEWS')]",
-			"type": "Microsoft.Synapse/workspaces/dataflows",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "srcOrderReviews"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
-								"type": "DatasetReference"
-							},
-							"name": "snkFact",
-							"rejectedDataLinkedService": {
-								"referenceName": "ws-pociob-WorkspaceDefaultStorage",
-								"type": "LinkedServiceReference"
-							}
-						}
-					],
-					"transformations": [
-						{
-							"name": "derNewColumns"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     Directory as string,",
-						"     FilePrefix as string",
-						"}",
-						"source(output(",
-						"          review_id as string,",
-						"          order_id as string,",
-						"          review_score as integer,",
-						"          review_comment_title as string,",
-						"          review_comment_message as string,",
-						"          review_creation_date as date,",
-						"          review_answer_timestamp as timestamp,",
-						"          {_sourcefile} as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: true,",
-						"     format: 'parquet') ~> srcOrderReviews",
-						"srcOrderReviews derive(ID_ORDER = order_id,",
-						"          ID_REVIEW = review_id,",
-						"          NU_SCORE = review_score,",
-						"          DS_TITLE = initCap(review_comment_title),",
-						"          DS_MESSAGE = review_comment_message,",
-						"          DT_CREATION = review_creation_date,",
-						"          TM_ANSWER = review_answer_timestamp,",
-						"          {_sourcefile} = {_sourcefile},",
-						"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet') ~> derNewColumns",
-						"derNewColumns sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'parquet',",
-						"     rowUrlColumn:'_watermark',",
-						"     truncate: true,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     mapColumn(",
-						"          ID_ORDER,",
-						"          ID_REVIEW,",
-						"          NU_SCORE,",
-						"          DS_TITLE,",
-						"          DS_MESSAGE,",
-						"          DT_CREATION,",
-						"          TM_ANSWER,",
-						"          {_sourcefile},",
-						"          {_watermark}",
-						"     )) ~> snkFact"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Read_OlistSilver_Parquet')]",
-				"[concat(variables('workspaceId'), '/datasets/ds_03_GOLD_Write_OlistGold_Parquet')]",
-				"[concat(variables('workspaceId'), '/linkedServices/ws-pociob-WorkspaceDefaultStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/pip_03_GOLD_FACT_ORDER_REVIEWS')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Process Order Reviews",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_03_GOLD_FACT_ORDER_REVIEWS",
-								"type": "DataFlowReference",
-								"parameters": {
-									"Directory": {
-										"value": "'@{pipeline().parameters.TargetDirectory}'",
-										"type": "Expression"
-									},
-									"FilePrefix": {
-										"value": "'@{pipeline().parameters.FileName}'",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"srcOrderReviews": {
-										"Directory": "@{pipeline().parameters.SourceDirectory}/olist_order_reviews_dataset"
-									},
-									"snkFact": {
-										"Directory": {
-											"value": "@pipeline().parameters.TargetDirectory",
-											"type": "Expression"
-										},
-										"Table": {
-											"value": "@pipeline().parameters.FileName",
-											"type": "Expression"
-										}
-									}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"FileName": {
-						"type": "string",
-						"defaultValue": "FACT_ORDER_REVIEWS"
-					},
-					"SourceDirectory": {
-						"type": "string",
-						"defaultValue": "SILVER_OLIST"
-					},
-					"TargetDirectory": {
-						"type": "string",
-						"defaultValue": "GOLD_OLIST"
-					}
-				},
-				"folder": {
-					"name": "03_GOLD_OLIST"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/dataflows/df_03_GOLD_FACT_ORDER_REVIEWS')]"
-			]
+			"dependsOn": [],
+			"location": "eastus"
 		}
 	]
 }
