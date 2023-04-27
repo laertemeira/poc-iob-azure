@@ -12,7 +12,7 @@
 						"referenceName": "ds_03_GOLD_Read_OlistSilver_Parquet",
 						"type": "DatasetReference"
 					},
-					"name": "srcSellers"
+					"name": "srcCategory"
 				}
 			],
 			"sinks": [
@@ -21,7 +21,7 @@
 						"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
 						"type": "DatasetReference"
 					},
-					"name": "snkDIMGEOLOCATION"
+					"name": "snkDIMCATEGORYTRANSLATION"
 				}
 			],
 			"transformations": [
@@ -42,8 +42,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> srcSellers",
-				"srcSellers derive(NM_PRODUCT_CATEGORY = initCap(product_category_name),",
+				"     format: 'parquet') ~> srcCategory",
+				"srcCategory derive(NM_PRODUCT_CATEGORY = initCap(product_category_name),",
 				"          NM_PRODUCT_CATEGORY_ENG = initCap(product_category_name_english),",
 				"          {_watermark} = $Directory + '/' + $FilePrefix + '/' + $FilePrefix + '_' + toString(currentTimestamp(),'yyyyMMddHHmmss') + '.parquet',",
 				"          {_sourcefile} = {_sourcefile}) ~> derDimensionColumns",
@@ -61,7 +61,7 @@
 				"          NM_PRODUCT_CATEGORY_ENG,",
 				"          {_sourcefile},",
 				"          {_watermark}",
-				"     )) ~> snkDIMGEOLOCATION"
+				"     )) ~> snkDIMCATEGORYTRANSLATION"
 			]
 		}
 	}
