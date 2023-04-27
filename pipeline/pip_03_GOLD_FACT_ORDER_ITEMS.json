@@ -1,0 +1,74 @@
+{
+	"name": "pip_03_GOLD_FACT_ORDER_ITEMS",
+	"properties": {
+		"activities": [
+			{
+				"name": "Process Fact Order Items",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_03_GOLD_FACT_ORDER_ITEMS",
+						"type": "DataFlowReference",
+						"parameters": {
+							"Directory": {
+								"value": "'@{pipeline().parameters.TargetDirectory}'",
+								"type": "Expression"
+							},
+							"FilePrefix": {
+								"value": "'@{pipeline().parameters.FileName}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"srcOrders": {
+								"Directory": "@{pipeline().parameters.SourceDirectory}/olist_order_items_dataset"
+							},
+							"snkFact": {
+								"Directory": {
+									"value": "@pipeline().parameters.TargetDirectory",
+									"type": "Expression"
+								},
+								"Table": {
+									"value": "@pipeline().parameters.FileName",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"FileName": {
+				"type": "string",
+				"defaultValue": "FACT_ORDERS"
+			},
+			"SourceDirectory": {
+				"type": "string",
+				"defaultValue": "SILVER_OLIST"
+			},
+			"TargetDirectory": {
+				"type": "string",
+				"defaultValue": "GOLD_OLIST"
+			}
+		},
+		"folder": {
+			"name": "03_GOLD_OLIST"
+		},
+		"annotations": []
+	}
+}
