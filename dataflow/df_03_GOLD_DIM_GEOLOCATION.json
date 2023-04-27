@@ -63,15 +63,13 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
-				"          ID_PRODUCT,",
-				"          NM_CATEGORY,",
-				"          NU_NAME_LENGHT,",
-				"          NU_DESCRIPTION_LENGHT,",
-				"          QT_PHOTOS,",
-				"          NU_WEIGHT_G,",
-				"          NU_HEIGHT_CM,",
-				"          NU_WIDTH_CM,",
-				"          {_sourcefile}",
+				"          NU_ZIPCODE_PREFIX,",
+				"          FL_LATITUDE,",
+				"          FL_LONGITUDE,",
+				"          NM_CITY,",
+				"          CD_STATE,",
+				"          {_sourcefile},",
+				"          {_watermark}",
 				"     )) ~> snkDIMGEOLOCATION"
 			]
 		}
