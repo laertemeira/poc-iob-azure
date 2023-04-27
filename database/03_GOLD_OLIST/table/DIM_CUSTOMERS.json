@@ -1,7 +1,7 @@
 {
-	"name": "FACT_ORDERS",
+	"name": "DIM_CUSTOMERS",
 	"properties": {
-		"Name": "FACT_ORDERS",
+		"Name": "DIM_CUSTOMERS",
 		"EntityType": "TABLE",
 		"Namespace": {
 			"DatabaseName": "03_GOLD_OLIST"
@@ -13,19 +13,6 @@
 		},
 		"StorageDescriptor": {
 			"Columns": [
-				{
-					"Name": "ID_ORDER",
-					"OriginDataTypeName": {
-						"TypeName": "string",
-						"IsComplexType": false,
-						"IsNullable": true,
-						"Length": 8000,
-						"Properties": {
-							"HIVE_TYPE_STRING": "string"
-						}
-					},
-					"DeltaFormatInvalidMessages": []
-				},
 				{
 					"Name": "ID_CUSTOMER",
 					"OriginDataTypeName": {
@@ -40,72 +27,45 @@
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "TM_PURCHASE",
+					"Name": "ID_CUSTOMER_UNIQUE",
 					"OriginDataTypeName": {
-						"TypeName": "timestamp",
+						"TypeName": "string",
 						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 8000,
 						"Properties": {
-							"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
-							"HIVE_TYPE_STRING": "timestamp"
+							"HIVE_TYPE_STRING": "string"
 						}
 					},
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "TM_APPROVED",
+					"Name": "NU_ZIP_CODE_PREFIX",
 					"OriginDataTypeName": {
-						"TypeName": "timestamp",
+						"TypeName": "integer",
 						"IsComplexType": false,
 						"IsNullable": true,
 						"Properties": {
-							"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
-							"HIVE_TYPE_STRING": "timestamp"
+							"HIVE_TYPE_STRING": "integer"
 						}
 					},
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "DT_DELIVERED_CARRIER",
+					"Name": "NM_CUSTOMER_CITY",
 					"OriginDataTypeName": {
-						"TypeName": "date",
+						"TypeName": "string",
 						"IsComplexType": false,
 						"IsNullable": true,
+						"Length": 8000,
 						"Properties": {
-							"DateFormat": "YYYY-MM-DD",
-							"HIVE_TYPE_STRING": "date"
+							"HIVE_TYPE_STRING": "string"
 						}
 					},
 					"DeltaFormatInvalidMessages": []
 				},
 				{
-					"Name": "DT_DELIVERED_CUSTOMER",
-					"OriginDataTypeName": {
-						"TypeName": "date",
-						"IsComplexType": false,
-						"IsNullable": true,
-						"Properties": {
-							"DateFormat": "YYYY-MM-DD",
-							"HIVE_TYPE_STRING": "date"
-						}
-					},
-					"DeltaFormatInvalidMessages": []
-				},
-				{
-					"Name": "DT_DELIVERY_ESTIMATED",
-					"OriginDataTypeName": {
-						"TypeName": "date",
-						"IsComplexType": false,
-						"IsNullable": true,
-						"Properties": {
-							"DateFormat": "YYYY-MM-DD",
-							"HIVE_TYPE_STRING": "date"
-						}
-					},
-					"DeltaFormatInvalidMessages": []
-				},
-				{
-					"Name": "DS_STATUS",
+					"Name": "CD_CUSTOMER_STATE",
 					"OriginDataTypeName": {
 						"TypeName": "string",
 						"IsComplexType": false,
@@ -137,13 +97,13 @@
 				"FormatType": "parquet",
 				"SerializeLib": "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe",
 				"Properties": {
-					"path": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/FACT_ORDERS",
+					"path": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/DIM_CUSTOMERS",
 					"FormatTypeSetToDatabaseDefault": false
 				}
 			},
 			"Source": {
 				"Provider": "ADLS",
-				"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/FACT_ORDERS",
+				"Location": "abfss://pociobprocess@pocioblake.dfs.core.windows.net/GOLD_OLIST/DIM_CUSTOMERS",
 				"Properties": {
 					"LinkedServiceName": "ws-pociob-WorkspaceDefaultStorage",
 					"LocationSetToDatabaseDefault": false
@@ -151,7 +111,7 @@
 			},
 			"Properties": {
 				"textinputformat.record.delimiter": ",",
-				"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+				"compression": "",
 				"derivedModelAttributeInfo": "{\"attributeReferences\":{}}"
 			},
 			"Compressed": false,
