@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "dfFact",
+				"name": "Process Fact Orders",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
