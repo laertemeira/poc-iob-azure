@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 19",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [geolocation_zip_code_prefix]\n,[geolocation_lat]\n,[geolocation_lng]\n,[geolocation_city]\n,[geolocation_state]\n,[_sourcefile]\n FROM [02_SILVER_OLIST].[dbo].[olist_geolocation]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "02_SILVER_OLIST",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
