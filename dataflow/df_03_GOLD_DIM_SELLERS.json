@@ -21,7 +21,7 @@
 						"referenceName": "ds_03_GOLD_Write_OlistGold_Parquet",
 						"type": "DatasetReference"
 					},
-					"name": "snkDIMGEOLOCATION"
+					"name": "snkDIMSELLERS"
 				}
 			],
 			"transformations": [
@@ -67,7 +67,7 @@
 				"          CD_STATE,",
 				"          {_sourcefile},",
 				"          {_watermark}",
-				"     )) ~> snkDIMGEOLOCATION"
+				"     )) ~> snkDIMSELLERS"
 			]
 		}
 	}
