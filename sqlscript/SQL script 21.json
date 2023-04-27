@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 21",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [ID_ORDER]\n,[ID_ORDER_ITEM]\n,[ID_PRODUCT]\n,[ID_SELLER]\n,[DT_SHIPPING_LIMIT]\n,[VL_PRICE]\n,[VL_FREIGHT]\n,[_sourcefile]\n FROM [03_GOLD_OLIST].[dbo].[FACT_ORDER_ITEMS]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "03_GOLD_OLIST",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
