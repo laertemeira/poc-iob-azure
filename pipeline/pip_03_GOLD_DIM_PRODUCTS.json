@@ -30,9 +30,9 @@
 						},
 						"datasetParameters": {
 							"srcProducts": {
-								"Directory": "@{pipeline().parameters.SourceDirectory}/olist_customers_dataset"
+								"Directory": "@{pipeline().parameters.SourceDirectory}/olist_products_dataset"
 							},
-							"snkDIMCUSTOMER": {
+							"snkDIMPRODUCTS": {
 								"Directory": {
 									"value": "@pipeline().parameters.TargetDirectory",
 									"type": "Expression"
