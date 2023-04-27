@@ -1,6 +1,9 @@
 {
 	"name": "df_03_GOLD_DIM_CUSTOMERS",
 	"properties": {
+		"folder": {
+			"name": "03_GOLD_OLIST"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
