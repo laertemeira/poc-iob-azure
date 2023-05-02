@@ -1,0 +1,68 @@
+{
+	"name": "Notebook 1",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "spPOCIOB",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "80eab2ba-93bb-4757-a90e-d112d9e6875e"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/7e9f5794-cc11-45c0-8ced-29f654880041/resourceGroups/rgPOCIOB/providers/Microsoft.Synapse/workspaces/ws-pociob/bigDataPools/spPOCIOB",
+				"name": "spPOCIOB",
+				"type": "Spark",
+				"endpoint": "https://ws-pociob.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spPOCIOB",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"df = spark.read.load('abfss://pociobcleansed@pocioblake.dfs.core.windows.net/SILVER_OLIST/olist_orders_dataset/olist_orders_dataset_20230427035620.parquet', format='parquet')\r\n",
+					"display(df.limit(10))"
+				],
+				"execution_count": 1
+			}
+		]
+	}
+}
